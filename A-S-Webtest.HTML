@@ -611,6 +611,18 @@
         <input id="fwFile" type="file" accept=".bin,application/octet-stream" />
         <button id="btnUpload" disabled class="btn-full">Upload Firmware</button>
       </div>
+      <div id="fwVersion" class="muted" style="margin-top:10px;">Firmware: — | Slot: —</div>
+    </div>
+    <div class="card">
+      <h3>ESP32 OTA Update</h3>
+      <div class="muted" style="margin-bottom:10px;">
+        Updates Autostomp-BLE firmware (this ESP32).
+      </div>
+      <div class="upload-section">
+        <input id="espOtaFile" type="file" accept=".bin,application/octet-stream" />
+        <button id="btnEspOtaUpload" disabled class="btn-full">Update ESP32</button>
+      </div>
+      <div id="espOtaStatus" class="muted" style="margin-top:8px;">Select .bin and press Update ESP32.</div>
     </div>
   </div>
 
@@ -642,6 +654,7 @@
       const PKT_SIZE    = HEADER_SIZE + MAX_PAYLOAD;
       const FD_DATA_MAX = MAX_PAYLOAD - 2;
       const UD_DATA_MAX = MAX_PAYLOAD - 2;
+      const XD_DATA_MAX = MAX_PAYLOAD - 2;
 
       // === DOM refs ===
       const bleStatusEl  = document.getElementById("bleStatus");
@@ -677,6 +690,10 @@
       const btnCompact   = document.getElementById("btnCompact");
       const btnFormat    = document.getElementById("btnFormat");
       const fsStatus     = document.getElementById("fsStatus");
+      const fwVersionEl  = document.getElementById("fwVersion");
+      const espOtaFile   = document.getElementById("espOtaFile");
+      const btnEspOtaUpload = document.getElementById("btnEspOtaUpload");
+      const espOtaStatus = document.getElementById("espOtaStatus");
 
       function log(s) { console.log(s); }
 
@@ -848,8 +865,6 @@
         macStatus.textContent = resp === "mac_ok" ? `Saved: ${mac}` : "Error saving MAC";
       };
 
-
-
       // === Clear MAC ===
       btnClearMac.onclick = async () => {
         await sendCmd("clear_mac");
@@ -878,6 +893,85 @@
 
       async function sendCmd(cmdStr) {
         await writePayload(new TextEncoder().encode(cmdStr));
+      }
+
+      async function refreshFwInfo() {
+        try {
+          await sendCmd("get_fw_info");
+          const resp = await waitForNotify(s => s.startsWith("fw_info:"), 2000);
+          const info = resp.slice(8).split(",");
+          const version = info[0] || "unknown";
+          const slot = info[1] || "unknown";
+          fwVersionEl.textContent = "Firmware: " + version + " | Slot: " + slot;
+        } catch {
+          fwVersionEl.textContent = "Firmware: — | Slot: —";
+        }
+      }
+
+      async function sendXS(totalSize) {
+        const p = new Uint8Array(6);
+        p[0] = 'X'.charCodeAt(0); p[1] = 'S'.charCodeAt(0);
+        p[2] = totalSize & 0xFF; p[3] = (totalSize >> 8) & 0xFF;
+        p[4] = (totalSize >> 16) & 0xFF; p[5] = (totalSize >> 24) & 0xFF;
+        await writePayload(p);
+        const resp = await waitForNotify(x => x === "xs_ok" || x.startsWith("xs_err"), 5000);
+        if (resp !== "xs_ok") throw new Error(resp);
+      }
+
+      async function sendXDAndWait(chunk, sentSoFar, maxRetries=30) {
+        const p = new Uint8Array(chunk.length + 2);
+        p[0] = 'X'.charCodeAt(0); p[1] = 'D'.charCodeAt(0);
+        p.set(chunk, 2);
+
+        const expectedOffset = sentSoFar + chunk.length;
+        const expectedAck = `xd_ok:${expectedOffset}`;
+
+        for (let attempt = 1; attempt <= maxRetries; attempt++) {
+          lastNotify = "";
+          const ackPromise = waitForNotify(
+            x => x === expectedAck || x.startsWith("xd_err"),
+            5000
+          );
+
+          await writePayload(p, { withoutResponse: true });
+
+          try {
+            const resp = await ackPromise;
+            if (resp === expectedAck) return;
+            throw new Error(resp);
+          } catch (e) {
+            if (attempt === maxRetries) {
+              throw new Error(`XD chunk failed at ${expectedOffset}: ${e.message || e}`);
+            }
+            await sleep(Math.min(10 * attempt, 100));
+          }
+        }
+
+        throw new Error(`XD chunk failed at ${expectedOffset}`);
+      }
+
+      async function sendXE() {
+        const p = new Uint8Array(2);
+        p[0] = 'X'.charCodeAt(0); p[1] = 'E'.charCodeAt(0);
+        await writePayload(p);
+        const resp = await waitForNotify(x => x === "xe_ok" || x.startsWith("xe_err"), 10000);
+        if (resp !== "xe_ok") throw new Error(resp);
+      }
+
+      async function uploadEsp32Ota(arrayBuffer) {
+        const fw = new Uint8Array(arrayBuffer);
+        if (!fw.length) throw new Error("empty file");
+
+        await sendXS(fw.length);
+        let sent = 0;
+        while (sent < fw.length) {
+          const n = Math.min(XD_DATA_MAX, fw.length - sent);
+          await sendXDAndWait(fw.slice(sent, sent + n), sent);
+          sent += n;
+          setProgress(Math.floor((sent * 100) / fw.length));
+        }
+        await sendXE();
+        setProgress(100);
       }
 
       // === ASTP ===
@@ -1261,6 +1355,26 @@
         finally { btnUpload.disabled = false; }
       };
 
+      btnEspOtaUpload.onclick = async () => {
+        if (!espOtaFile || !btnEspOtaUpload || !espOtaStatus) return;
+        if (!espOtaFile.files || espOtaFile.files.length === 0) {
+          espOtaStatus.textContent = "Select a .bin file first.";
+          return;
+        }
+        const f = espOtaFile.files[0];
+        btnEspOtaUpload.disabled = true;
+        espOtaStatus.textContent = `Uploading ${f.name}...`;
+        setProgress(0);
+        try {
+          await uploadEsp32Ota(await f.arrayBuffer());
+          espOtaStatus.textContent = "ESP32 OTA complete. Device restarting...";
+        } catch (e) {
+          espOtaStatus.textContent = `ESP32 OTA failed: ${e.message}`;
+        } finally {
+          btnEspOtaUpload.disabled = false;
+        }
+      };
+
       // === BLE connect ===
       btnConnect.onclick = async () => {
         try {
@@ -1276,6 +1390,7 @@
             btnConnect.disabled    = false;
             btnDisconnect.disabled = true;
             btnUpload.disabled     = true;
+            if (btnEspOtaUpload) btnEspOtaUpload.disabled = true;
             btnWavUpload.disabled  = true;
             btnListFiles.disabled  = true;
             btnCompact.disabled    = true;
@@ -1291,6 +1406,7 @@
             autoLabel.textContent    = "—";
             btnAuto.className        = "auto-off";
             soundNameEl.textContent  = "—";
+            fwVersionEl.textContent = "Firmware: — | Slot: —";
             for (const w of waiters) {
               if (!w.done) { w.done=true; w.reject(new Error("BLE disconnected")); }
             }
@@ -1313,6 +1429,7 @@
           btnConnect.disabled    = true;
           btnDisconnect.disabled = false;
           btnUpload.disabled     = false;
+          if (btnEspOtaUpload) btnEspOtaUpload.disabled = false;
           btnWavUpload.disabled  = false;
           btnListFiles.disabled  = false;
           btnCompact.disabled    = false;
@@ -1332,6 +1449,7 @@
               macStatus.textContent = `Active: ${addr}`;
             }
           } catch { /* no MAC saved */ }
+          refreshFwInfo();
 
         } catch(e) {
           log("ERROR: " + e.message);
