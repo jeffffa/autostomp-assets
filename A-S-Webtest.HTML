@@ -443,6 +443,90 @@
       touch-action: manipulation;
     }
 
+    .btn-compact {
+      min-height: 38px;
+      padding: 8px 10px;
+      font-size: 0.85em;
+      margin: 0;
+    }
+
+    .update-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .update-banner {
+      display: none;
+      margin-top: 8px;
+      padding: 10px;
+      border-radius: 10px;
+      background: linear-gradient(145deg, #172b1a, #112014);
+      border: 1px solid #2f6a3a;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .update-banner.show {
+      display: flex;
+    }
+
+    .card.has-update {
+      border: 1px solid #3a8d52;
+      box-shadow: 0 0 0 1px rgba(65,160,92,0.25), 0 0 18px rgba(65,160,92,0.18);
+    }
+
+    .btn-compact.attention {
+      background: #1f5a31;
+      border-color: #4ccb73;
+      color: #d8ffe5;
+      animation: pulse-update 1.2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-update {
+      0%, 100% { box-shadow: 0 0 0 rgba(70,200,110,0.0); }
+      50% { box-shadow: 0 0 10px rgba(70,200,110,0.35); }
+    }
+
+    .update-art {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background:
+        radial-gradient(circle at 30% 28%, #85ff9a 0%, #2f9f45 55%, #17692b 100%);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12), 0 0 16px rgba(80,180,95,0.3);
+    }
+
+    .update-art svg {
+      width: 24px;
+      height: 24px;
+      fill: #f4fff6;
+    }
+
+    .update-text {
+      min-width: 0;
+    }
+
+    .update-title {
+      font-size: 0.86em;
+      font-weight: 700;
+      color: #b4ffbe;
+      line-height: 1.1;
+    }
+
+    .update-meta {
+      margin-top: 3px;
+      color: #82c88d;
+      font-size: 0.75em;
+      font-family: monospace;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
     .mac-row {
       display: flex;
       gap: 8px;
@@ -602,27 +686,61 @@
       </div>
       <div class="muted" id="macStatus" style="margin-top:8px;">No MAC configured.</div>
     </div>
-    <div class="card">
+    <div class="card" id="fwUpdateCard">
       <h3>Firmware Update</h3>
       <div class="muted" style="margin-bottom:10px;">
         Device must be in bootloader mode (hold button at startup).
       </div>
+      <div id="fwUpdateBanner" class="update-banner">
+        <div class="update-art" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M11 4h2v8h3l-4 5-4-5h3z"></path>
+            <path d="M5 18h14v2H5z"></path>
+          </svg>
+        </div>
+        <div class="update-text">
+          <div class="update-title" id="fwUpdateTitle">New update available</div>
+          <div class="update-meta" id="fwUpdateMeta">Version — | Release —</div>
+        </div>
+      </div>
+      <div class="update-actions">
+        <button id="btnCheckFwUpdate" disabled class="btn-full btn-compact" style="flex:1;">Check Update</button>
+        <button id="btnInstallFwUpdate" disabled class="btn-full btn-compact" style="flex:1;">Install</button>
+      </div>
+      <div id="fwUpdateStatus" class="muted" style="margin-top:8px;">Press Check Update.</div>
       <div class="upload-section">
         <input id="fwFile" type="file" accept=".bin,application/octet-stream" />
-        <button id="btnUpload" disabled class="btn-full">Upload Firmware</button>
+        <button id="btnUpload" disabled class="btn-full btn-compact">Manual Update</button>
       </div>
-      <div id="fwVersion" class="muted" style="margin-top:10px;">Firmware: — | Slot: —</div>
     </div>
-    <div class="card">
+    <div class="card" id="espOtaCard">
       <h3>ESP32 OTA Update</h3>
       <div class="muted" style="margin-bottom:10px;">
         Updates Autostomp-BLE firmware (this ESP32).
       </div>
+      <div id="updateBanner" class="update-banner">
+        <div class="update-art" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M11 4h2v8h3l-4 5-4-5h3z"></path>
+            <path d="M5 18h14v2H5z"></path>
+          </svg>
+        </div>
+        <div class="update-text">
+          <div class="update-title" id="updateTitle">New update available</div>
+          <div class="update-meta" id="updateMeta">Version — | Release —</div>
+        </div>
+      </div>
+      <div class="update-actions">
+        <button id="btnCheckUpdate" disabled class="btn-full btn-compact" style="flex:1;">Check Update</button>
+        <button id="btnInstallUpdate" disabled class="btn-full btn-compact" style="flex:1;">Install</button>
+      </div>
+      <div id="updateStatus" class="muted" style="margin-top:8px;">Press Check Update.</div>
       <div class="upload-section">
         <input id="espOtaFile" type="file" accept=".bin,application/octet-stream" />
-        <button id="btnEspOtaUpload" disabled class="btn-full">Update ESP32</button>
+        <button id="btnEspOtaUpload" disabled class="btn-full btn-compact">Manual Update</button>
       </div>
       <div id="espOtaStatus" class="muted" style="margin-top:8px;">Select .bin and press Update ESP32.</div>
+      <div id="fwVersion" class="muted" style="margin-top:8px;">Firmware: — | Slot: —</div>
     </div>
   </div>
 
@@ -691,9 +809,25 @@
       const btnFormat    = document.getElementById("btnFormat");
       const fsStatus     = document.getElementById("fsStatus");
       const fwVersionEl  = document.getElementById("fwVersion");
+      const fwUpdateCard = document.getElementById("fwUpdateCard");
+      const espOtaCard = document.getElementById("espOtaCard");
       const espOtaFile   = document.getElementById("espOtaFile");
       const btnEspOtaUpload = document.getElementById("btnEspOtaUpload");
       const espOtaStatus = document.getElementById("espOtaStatus");
+
+      const btnCheckFwUpdate = document.getElementById("btnCheckFwUpdate");
+      const btnInstallFwUpdate = document.getElementById("btnInstallFwUpdate");
+      const fwUpdateStatus = document.getElementById("fwUpdateStatus");
+      const fwUpdateBanner = document.getElementById("fwUpdateBanner");
+      const fwUpdateTitle = document.getElementById("fwUpdateTitle");
+      const fwUpdateMeta = document.getElementById("fwUpdateMeta");
+
+      const btnCheckUpdate = document.getElementById("btnCheckUpdate");
+      const btnInstallUpdate = document.getElementById("btnInstallUpdate");
+      const updateStatus = document.getElementById("updateStatus");
+      const updateBanner = document.getElementById("updateBanner");
+      const updateTitle = document.getElementById("updateTitle");
+      const updateMeta = document.getElementById("updateMeta");
 
       function log(s) { console.log(s); }
 
@@ -721,6 +855,79 @@
       let currentAuto  = null;
       let currentSound = null;
       let currentSoundName = null;
+      let currentFwVersion = null;
+      let pendingEspUpdate = null;
+      let pendingFwUpdate = null;
+
+      const ESP32_UPDATE_MANIFEST_URL = "https://raw.githubusercontent.com/jeffffa/site-test/main/Firmware/latest.json";
+      const AUTOSTOMP_UPDATE_MANIFEST_URL = "https://raw.githubusercontent.com/jeffffa/site-test/main/Firmware/latest.json";
+
+      function parseVersionParts(v) {
+        if (!v) return null;
+        const clean = String(v).trim().replace(/^v/i, "").split("-")[0];
+        if (!/^\d+(\.\d+){0,2}$/.test(clean)) return null;
+        const parts = clean.split(".").map(n => parseInt(n, 10));
+        while (parts.length < 3) parts.push(0);
+        return parts.slice(0, 3);
+      }
+
+      function compareSemver(a, b) {
+        const pa = parseVersionParts(a);
+        const pb = parseVersionParts(b);
+        if (!pa && !pb) return 0;
+        if (!pa) return -1;
+        if (!pb) return 1;
+        for (let i = 0; i < 3; i++) {
+          if (pa[i] < pb[i]) return -1;
+          if (pa[i] > pb[i]) return 1;
+        }
+        return 0;
+      }
+
+      async function fetchWithTimeout(url, timeoutMs = 12000) {
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+        try {
+          return await fetch(url, { cache: "no-store", signal: ctrl.signal });
+        } finally {
+          clearTimeout(timer);
+        }
+      }
+
+      function formatReleaseDate(raw) {
+        if (!raw) return "Unknown date";
+        const d = new Date(raw);
+        if (Number.isNaN(d.getTime())) return String(raw);
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, "0");
+        const day = String(d.getDate()).padStart(2, "0");
+        return `${y}-${m}-${day}`;
+      }
+
+      function setUpdateAccent(cardEl, installBtn, on) {
+        cardEl.classList.toggle("has-update", !!on);
+        installBtn.classList.toggle("attention", !!on);
+      }
+
+      function parseUpdateEntry(manifest, kind) {
+        const src = manifest && typeof manifest === "object" ? manifest : {};
+        if (kind === "esp32") {
+          const node = src.esp32 || src.ota || src;
+          return {
+            version: String(node.version || src.version || "").trim(),
+            binUrl: String(node.bin_url || node.url || src.bin_url || "").trim(),
+            releaseDate: formatReleaseDate(node.release_date || node.date || node.published_at || node.released_at),
+            currentVersion: String(node.current_version || "").trim(),
+          };
+        }
+        const node = src.autostomp || src.stomp || src.firmware || {};
+        return {
+          version: String(node.version || src.stomp_version || "").trim(),
+          binUrl: String(node.bin_url || node.url || src.stomp_bin_url || "").trim(),
+          releaseDate: formatReleaseDate(node.release_date || node.date || node.published_at || node.released_at),
+          currentVersion: String(node.current_version || src.stomp_current_version || "").trim(),
+        };
+      }
 
       // === Controls enable/disable ===
       function enableControls(on) {
@@ -902,9 +1109,165 @@
           const info = resp.slice(8).split(",");
           const version = info[0] || "unknown";
           const slot = info[1] || "unknown";
+          currentFwVersion = version;
           fwVersionEl.textContent = "Firmware: " + version + " | Slot: " + slot;
+          return { version, slot };
         } catch {
+          currentFwVersion = "unknown";
           fwVersionEl.textContent = "Firmware: — | Slot: —";
+          return { version: "unknown", slot: "unknown" };
+        }
+      }
+
+      async function checkForUpdate() {
+        btnInstallUpdate.disabled = true;
+        pendingEspUpdate = null;
+        updateBanner.classList.remove("show");
+        setUpdateAccent(espOtaCard, btnInstallUpdate, false);
+        updateStatus.textContent = "Checking for updates...";
+
+        if (!currentFwVersion) await refreshFwInfo();
+
+        let manifest;
+        try {
+          const resp = await fetchWithTimeout(ESP32_UPDATE_MANIFEST_URL);
+          if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+          manifest = await resp.json();
+        } catch (e) {
+          updateStatus.textContent = `Check failed: ${e.message}`;
+          return;
+        }
+
+        const entry = parseUpdateEntry(manifest, "esp32");
+        const latestVersion = entry.version;
+        const binUrl = entry.binUrl;
+        const releaseDate = entry.releaseDate;
+        if (!latestVersion || !binUrl) {
+          updateStatus.textContent = "Manifest missing version or bin_url.";
+          return;
+        }
+
+        const cmp = compareSemver(currentFwVersion, latestVersion);
+        if (cmp < 0) {
+          pendingEspUpdate = { version: latestVersion, binUrl, releaseDate };
+          btnInstallUpdate.disabled = false;
+          updateTitle.textContent = "New update available";
+          updateMeta.textContent = `Version ${latestVersion} | Release ${releaseDate}`;
+          updateBanner.classList.add("show");
+          setUpdateAccent(espOtaCard, btnInstallUpdate, true);
+          updateStatus.textContent = `Update available: ${currentFwVersion} -> ${latestVersion}`;
+        } else if (cmp === 0) {
+          updateStatus.textContent = `Up to date (${currentFwVersion}).`;
+          updateMeta.textContent = `Version ${latestVersion} | Release ${releaseDate}`;
+        } else {
+          updateStatus.textContent = `Device version (${currentFwVersion}) is newer than manifest (${latestVersion}).`;
+          updateMeta.textContent = `Version ${latestVersion} | Release ${releaseDate}`;
+        }
+      }
+
+      async function installPendingUpdate() {
+        if (!pendingEspUpdate) {
+          updateStatus.textContent = "No update selected. Press Check Update.";
+          return;
+        }
+
+        btnInstallUpdate.disabled = true;
+        btnCheckUpdate.disabled = true;
+        if (btnEspOtaUpload) btnEspOtaUpload.disabled = true;
+        updateStatus.textContent = `Downloading ${pendingEspUpdate.version}...`;
+        setProgress(0);
+
+        try {
+          const resp = await fetchWithTimeout(pendingEspUpdate.binUrl, 30000);
+          if (!resp.ok) throw new Error(`Download failed: HTTP ${resp.status}`);
+          const fwBuffer = await resp.arrayBuffer();
+          espOtaStatus.textContent = `Uploading ${pendingEspUpdate.version}...`;
+          await uploadEsp32Ota(fwBuffer);
+          espOtaStatus.textContent = "ESP32 OTA complete. Device restarting...";
+          updateStatus.textContent = `Installed ${pendingEspUpdate.version}.`;
+          pendingEspUpdate = null;
+          setUpdateAccent(espOtaCard, btnInstallUpdate, false);
+          await refreshFwInfo();
+        } catch (e) {
+          updateStatus.textContent = `Install failed: ${e.message}`;
+        } finally {
+          btnCheckUpdate.disabled = !device || !device.gatt || !device.gatt.connected;
+          btnInstallUpdate.disabled = true;
+          if (btnEspOtaUpload) btnEspOtaUpload.disabled = false;
+        }
+      }
+
+      async function checkForFwUpdate() {
+        btnInstallFwUpdate.disabled = true;
+        pendingFwUpdate = null;
+        fwUpdateBanner.classList.remove("show");
+        setUpdateAccent(fwUpdateCard, btnInstallFwUpdate, false);
+        fwUpdateStatus.textContent = "Checking for updates...";
+
+        let manifest;
+        try {
+          const resp = await fetchWithTimeout(AUTOSTOMP_UPDATE_MANIFEST_URL);
+          if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+          manifest = await resp.json();
+        } catch (e) {
+          fwUpdateStatus.textContent = `Check failed: ${e.message}`;
+          return;
+        }
+
+        const entry = parseUpdateEntry(manifest, "autostomp");
+        if (!entry.version || !entry.binUrl) {
+          fwUpdateStatus.textContent = "Manifest missing autostomp version or bin_url.";
+          return;
+        }
+
+        const cmp = entry.currentVersion ? compareSemver(entry.currentVersion, entry.version) : -1;
+        if (cmp < 0) {
+          pendingFwUpdate = { version: entry.version, binUrl: entry.binUrl, releaseDate: entry.releaseDate };
+          btnInstallFwUpdate.disabled = false;
+          fwUpdateTitle.textContent = "New update available";
+          fwUpdateMeta.textContent = `Version ${entry.version} | Release ${entry.releaseDate}`;
+          fwUpdateBanner.classList.add("show");
+          setUpdateAccent(fwUpdateCard, btnInstallFwUpdate, true);
+          fwUpdateStatus.textContent = entry.currentVersion
+            ? `Update available: ${entry.currentVersion} -> ${entry.version}`
+            : `Update available: ${entry.version}`;
+        } else if (cmp === 0) {
+          fwUpdateStatus.textContent = `Up to date (${entry.currentVersion}).`;
+          fwUpdateMeta.textContent = `Version ${entry.version} | Release ${entry.releaseDate}`;
+        } else {
+          fwUpdateStatus.textContent = `Device version (${entry.currentVersion}) is newer than manifest (${entry.version}).`;
+          fwUpdateMeta.textContent = `Version ${entry.version} | Release ${entry.releaseDate}`;
+        }
+      }
+
+      async function installPendingFwUpdate() {
+        if (!pendingFwUpdate) {
+          fwUpdateStatus.textContent = "No update selected. Press Check Update.";
+          return;
+        }
+
+        btnInstallFwUpdate.disabled = true;
+        btnCheckFwUpdate.disabled = true;
+        if (btnUpload) btnUpload.disabled = true;
+        fwUpdateStatus.textContent = `Downloading ${pendingFwUpdate.version}...`;
+        setProgress(0);
+
+        try {
+          const resp = await fetchWithTimeout(pendingFwUpdate.binUrl, 30000);
+          if (!resp.ok) throw new Error(`Download failed: HTTP ${resp.status}`);
+          const fwBuffer = await resp.arrayBuffer();
+          fwUpdateStatus.textContent = `Uploading ${pendingFwUpdate.version} (bootloader mode required)...`;
+          await uploadFirmware(fwBuffer);
+          fwUpdateStatus.textContent = `Installed ${pendingFwUpdate.version}.`;
+          pendingFwUpdate = null;
+          setUpdateAccent(fwUpdateCard, btnInstallFwUpdate, false);
+        } catch (e) {
+          fwUpdateStatus.textContent = `Install failed: ${e.message}`;
+        } finally {
+          const connected = !!(device && device.gatt && device.gatt.connected);
+          btnCheckFwUpdate.disabled = !connected;
+          btnInstallFwUpdate.disabled = true;
+          if (btnUpload) btnUpload.disabled = false;
         }
       }
 
@@ -1375,6 +1738,42 @@
         }
       };
 
+      btnCheckUpdate.onclick = async () => {
+        if (!device || !device.gatt || !device.gatt.connected) {
+          updateStatus.textContent = "Connect to device first.";
+          return;
+        }
+        btnCheckUpdate.disabled = true;
+        try { await checkForUpdate(); }
+        finally { btnCheckUpdate.disabled = false; }
+      };
+
+      btnInstallUpdate.onclick = async () => {
+        if (!device || !device.gatt || !device.gatt.connected) {
+          updateStatus.textContent = "Connect to device first.";
+          return;
+        }
+        await installPendingUpdate();
+      };
+
+      btnCheckFwUpdate.onclick = async () => {
+        if (!device || !device.gatt || !device.gatt.connected) {
+          fwUpdateStatus.textContent = "Connect to device first.";
+          return;
+        }
+        btnCheckFwUpdate.disabled = true;
+        try { await checkForFwUpdate(); }
+        finally { btnCheckFwUpdate.disabled = false; }
+      };
+
+      btnInstallFwUpdate.onclick = async () => {
+        if (!device || !device.gatt || !device.gatt.connected) {
+          fwUpdateStatus.textContent = "Connect to device first.";
+          return;
+        }
+        await installPendingFwUpdate();
+      };
+
       // === BLE connect ===
       btnConnect.onclick = async () => {
         try {
@@ -1391,6 +1790,10 @@
             btnDisconnect.disabled = true;
             btnUpload.disabled     = true;
             if (btnEspOtaUpload) btnEspOtaUpload.disabled = true;
+            if (btnCheckFwUpdate) btnCheckFwUpdate.disabled = true;
+            if (btnInstallFwUpdate) btnInstallFwUpdate.disabled = true;
+            if (btnCheckUpdate) btnCheckUpdate.disabled = true;
+            if (btnInstallUpdate) btnInstallUpdate.disabled = true;
             btnWavUpload.disabled  = true;
             btnListFiles.disabled  = true;
             btnCompact.disabled    = true;
@@ -1407,6 +1810,14 @@
             btnAuto.className        = "auto-off";
             soundNameEl.textContent  = "—";
             fwVersionEl.textContent = "Firmware: — | Slot: —";
+            fwUpdateStatus.textContent = "Press Check Update.";
+            fwUpdateBanner.classList.remove("show");
+            setUpdateAccent(fwUpdateCard, btnInstallFwUpdate, false);
+            updateStatus.textContent = "Press Check Update.";
+            updateBanner.classList.remove("show");
+            setUpdateAccent(espOtaCard, btnInstallUpdate, false);
+            pendingFwUpdate = null;
+            pendingEspUpdate = null;
             for (const w of waiters) {
               if (!w.done) { w.done=true; w.reject(new Error("BLE disconnected")); }
             }
@@ -1429,7 +1840,9 @@
           btnConnect.disabled    = true;
           btnDisconnect.disabled = false;
           btnUpload.disabled     = false;
+          if (btnCheckFwUpdate) btnCheckFwUpdate.disabled = false;
           if (btnEspOtaUpload) btnEspOtaUpload.disabled = false;
+          if (btnCheckUpdate) btnCheckUpdate.disabled = false;
           btnWavUpload.disabled  = false;
           btnListFiles.disabled  = false;
           btnCompact.disabled    = false;
