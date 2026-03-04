@@ -4,6 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noindex, nofollow" />
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <title>Access</title>
   <style>
     body { font-family: system-ui; padding: 40px; max-width: 520px; margin: 0 auto; }
@@ -37,7 +40,8 @@
     function unlock() {
       if (pinEl.value === ACCESS_PIN) {
         sessionStorage.setItem("autostomp_ok", "1");
-        location.href = DEST;
+        // Cache-bust to force latest version from GitHub Pages/CDN.
+        location.replace(`${DEST}?v=${Date.now()}`);
       } else {
         errEl.style.display = "block";
         pinEl.select();
