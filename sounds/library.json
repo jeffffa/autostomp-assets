@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "sounds": [
+    {
+      "name": "Example Stomp 1",
+      "description": "Replace with your own WAV file in /sounds",
+      "file": "example-stomp-1.wav"
+    },
+    {
+      "name": "Example Stomp 2",
+      "description": "Replace with your own WAV file in /sounds",
+      "file": "example-stomp-2.wav"
+    }
+  ]
+}

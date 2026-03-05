@@ -566,6 +566,71 @@
       gap: 4px;
     }
 
+    .sound-library-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .sound-library-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      background: #232323;
+      border: 1px solid #333;
+      border-radius: 10px;
+    }
+
+    .sound-library-meta {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .sound-library-name {
+      font-size: 0.92em;
+      font-weight: 600;
+      color: #f0f0f0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sound-library-desc {
+      margin-top: 2px;
+      font-size: 0.78em;
+      color: #888;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sound-preview-btn {
+      width: 40px;
+      height: 40px;
+      min-height: 40px;
+      padding: 0;
+      margin: 0;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.08em;
+    }
+
+    .sound-import-btn {
+      min-height: 40px;
+      margin: 0;
+      padding: 8px 12px;
+      font-size: 0.85em;
+      white-space: nowrap;
+    }
+
+    .sound-library-empty {
+      margin-top: 8px;
+    }
+
     /* ---- Progress ---- */
     progress {
       width: 100%;
@@ -679,6 +744,19 @@
         <button id="btnWavUpload" disabled class="btn-full">Upload WAV</button>
       </div>
       <div id="wavStatus" class="muted" style="margin-top:8px;"></div>
+    </div>
+
+    <div class="card" id="soundLibraryCard">
+      <h3>Sound Library</h3>
+      <div class="muted" style="margin-bottom:8px;">
+        Preview sounds from GitHub and import directly to Footloose.
+      </div>
+      <div class="update-actions">
+        <button id="btnLoadSoundLibrary" class="btn-full btn-compact" style="flex:1;">Load Library</button>
+      </div>
+      <div id="soundLibraryStatus" class="muted" style="margin-top:8px;">Press Load Library.</div>
+      <div id="soundLibraryEmpty" class="muted sound-library-empty">No sounds loaded.</div>
+      <div id="soundLibraryList" class="sound-library-list"></div>
     </div>
 
   </div>
@@ -807,6 +885,7 @@
       const btnUpload    = document.getElementById("btnUpload");
       const btnWavUpload = document.getElementById("btnWavUpload");
       const btnListFiles = document.getElementById("btnListFiles");
+      const btnLoadSoundLibrary = document.getElementById("btnLoadSoundLibrary");
       const fwFile       = document.getElementById("fwFile");
       const wavFile      = document.getElementById("wavFile");
       const wavStatus    = document.getElementById("wavStatus");
@@ -814,6 +893,9 @@
       const progText     = document.getElementById("progText");
       const fileList     = document.getElementById("fileList");
       const fileListEmpty= document.getElementById("fileListEmpty");
+      const soundLibraryList = document.getElementById("soundLibraryList");
+      const soundLibraryEmpty = document.getElementById("soundLibraryEmpty");
+      const soundLibraryStatus = document.getElementById("soundLibraryStatus");
 
       const elTempo      = document.getElementById("tempoDisplay");
       const btnTempoUp   = document.getElementById("btnTempoUp");
@@ -884,9 +966,15 @@
       let currentFwVersion = null;
       let pendingEspUpdate = null;
       let pendingFwUpdate = null;
+      let soundLibraryItems = [];
+      let soundPreviewAudio = null;
+      let activePreviewUrl = null;
+      let isWavUploadBusy = false;
 
       const ESP32_UPDATE_MANIFEST_URL = "https://raw.githubusercontent.com/jeffffa/site-test/main/firmware/latest.json";
       const AUTOSTOMP_UPDATE_MANIFEST_URL = "https://raw.githubusercontent.com/jeffffa/site-test/main/firmware/latest.json";
+      const SOUND_LIBRARY_MANIFEST_URL = "https://raw.githubusercontent.com/jeffffa/site-test/main/sounds/library.json";
+      const SOUND_LIBRARY_GITHUB_API_URL = "https://api.github.com/repos/jeffffa/site-test/contents/sounds";
 
       function parseVersionParts(v) {
         if (!v) return null;
@@ -953,6 +1041,271 @@
           releaseDate: formatReleaseDate(node.release_date || node.date || node.published_at || node.released_at),
           currentVersion: String(node.current_version || src.stomp_current_version || "").trim(),
         };
+      }
+
+      function isDeviceConnected() {
+        return !!(device && device.gatt && device.gatt.connected);
+      }
+
+      function toAbsoluteUrl(raw, baseUrl) {
+        if (!raw) return "";
+        try {
+          return new URL(String(raw).trim(), baseUrl).toString();
+        } catch {
+          return "";
+        }
+      }
+
+      function normalizeSoundFileName(name, sourceUrl) {
+        let value = String(name || "").trim();
+        if (!value) {
+          try {
+            const u = new URL(sourceUrl);
+            value = decodeURIComponent(u.pathname.split("/").pop() || "");
+          } catch {}
+        }
+        if (!value) value = "sound.wav";
+        value = value.replace(/[\\/:*?"<>|]+/g, "_").replace(/\s+/g, "_");
+        if (!/\.wav$/i.test(value)) value += ".wav";
+        return value;
+      }
+
+      function parseSoundLibrary(manifest, manifestUrl) {
+        const src = manifest && typeof manifest === "object" ? manifest : {};
+        const list = Array.isArray(manifest)
+          ? manifest
+          : (Array.isArray(src.sounds) ? src.sounds : (Array.isArray(src.files) ? src.files : []));
+
+        return list.map((item, idx) => {
+          let rawUrl = "";
+          let previewRaw = "";
+          let rawName = "";
+          let desc = "";
+
+          if (typeof item === "string") {
+            rawUrl = item;
+            previewRaw = item;
+          } else if (item && typeof item === "object") {
+            rawUrl = item.download_url || item.url || item.file || item.path || "";
+            previewRaw = item.preview_url || item.preview || rawUrl;
+            rawName = item.file_name || item.filename || item.name || item.title || "";
+            desc = item.description || item.desc || "";
+          } else {
+            return null;
+          }
+
+          const downloadUrl = toAbsoluteUrl(rawUrl, manifestUrl);
+          const previewUrl = toAbsoluteUrl(previewRaw, manifestUrl) || downloadUrl;
+          if (!downloadUrl) return null;
+
+          const fileName = normalizeSoundFileName(rawName, downloadUrl);
+          const label = String(rawName || fileName).replace(/\.wav$/i, "");
+
+          return {
+            id: `lib_${idx}`,
+            label,
+            description: String(desc || "").trim(),
+            fileName,
+            downloadUrl,
+            previewUrl,
+          };
+        }).filter(Boolean);
+      }
+
+      function parseGithubSoundContents(contents) {
+        const list = Array.isArray(contents) ? contents : [];
+        return list
+          .filter(item => item && item.type === "file" && /\.wav$/i.test(String(item.name || "")) && item.download_url)
+          .map((item, idx) => {
+            const fileName = normalizeSoundFileName(item.name, item.download_url);
+            const label = fileName.replace(/\.wav$/i, "");
+            return {
+              id: `gh_${idx}`,
+              label,
+              description: "GitHub folder",
+              fileName,
+              downloadUrl: item.download_url,
+              previewUrl: item.download_url,
+            };
+          });
+      }
+
+      function updateLibraryImportButtons() {
+        const canImport = isDeviceConnected() && !isWavUploadBusy;
+        document.querySelectorAll(".lib-import-btn").forEach(btn => {
+          btn.disabled = !canImport;
+        });
+      }
+
+      function setSoundLibraryStatus(text) {
+        soundLibraryStatus.textContent = text;
+      }
+
+      function resetSoundPreviewButtons() {
+        document.querySelectorAll(".sound-preview-btn").forEach(btn => {
+          btn.textContent = "🔊";
+        });
+      }
+
+      function stopSoundPreview() {
+        if (soundPreviewAudio) {
+          soundPreviewAudio.pause();
+          soundPreviewAudio.currentTime = 0;
+        }
+        activePreviewUrl = null;
+        resetSoundPreviewButtons();
+      }
+
+      async function toggleSoundPreview(item, btnEl) {
+        if (!item.previewUrl) {
+          setSoundLibraryStatus(`No preview URL for ${item.label}.`);
+          return;
+        }
+
+        if (!soundPreviewAudio) {
+          soundPreviewAudio = new Audio();
+          soundPreviewAudio.addEventListener("ended", () => {
+            activePreviewUrl = null;
+            resetSoundPreviewButtons();
+          });
+        }
+
+        if (activePreviewUrl === item.previewUrl && !soundPreviewAudio.paused) {
+          stopSoundPreview();
+          setSoundLibraryStatus("Preview stopped.");
+          return;
+        }
+
+        try {
+          soundPreviewAudio.pause();
+          soundPreviewAudio.src = item.previewUrl;
+          soundPreviewAudio.currentTime = 0;
+          await soundPreviewAudio.play();
+          activePreviewUrl = item.previewUrl;
+          resetSoundPreviewButtons();
+          btnEl.textContent = "■";
+          setSoundLibraryStatus(`Playing: ${item.label}`);
+        } catch (e) {
+          activePreviewUrl = null;
+          resetSoundPreviewButtons();
+          setSoundLibraryStatus(`Preview failed: ${e.message}`);
+        }
+      }
+
+      function renderSoundLibrary() {
+        soundLibraryList.innerHTML = "";
+        if (!soundLibraryItems.length) {
+          soundLibraryEmpty.style.display = "block";
+          soundLibraryEmpty.textContent = "No sounds loaded.";
+          return;
+        }
+
+        soundLibraryEmpty.style.display = "none";
+        soundLibraryItems.forEach(item => {
+          const row = document.createElement("div");
+          row.className = "sound-library-row";
+
+          const previewBtn = document.createElement("button");
+          previewBtn.className = "sound-preview-btn";
+          previewBtn.textContent = "🔊";
+          previewBtn.title = `Preview ${item.label}`;
+          previewBtn.addEventListener("click", () => toggleSoundPreview(item, previewBtn));
+
+          const meta = document.createElement("div");
+          meta.className = "sound-library-meta";
+
+          const name = document.createElement("div");
+          name.className = "sound-library-name";
+          name.textContent = item.label;
+
+          const desc = document.createElement("div");
+          desc.className = "sound-library-desc";
+          desc.textContent = item.description || item.fileName;
+
+          meta.appendChild(name);
+          meta.appendChild(desc);
+
+          const importBtn = document.createElement("button");
+          importBtn.className = "sound-import-btn lib-import-btn";
+          importBtn.textContent = "Import";
+          importBtn.title = `Import ${item.fileName} to device`;
+          importBtn.addEventListener("click", () => importLibrarySound(item));
+
+          row.appendChild(previewBtn);
+          row.appendChild(meta);
+          row.appendChild(importBtn);
+          soundLibraryList.appendChild(row);
+        });
+
+        updateLibraryImportButtons();
+      }
+
+      async function loadSoundLibrary() {
+        setSoundLibraryStatus("Loading sound library...");
+        soundLibraryItems = [];
+        renderSoundLibrary();
+
+        try {
+          const resp = await fetchWithTimeout(SOUND_LIBRARY_MANIFEST_URL);
+          if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+          const manifest = await resp.json();
+          soundLibraryItems = parseSoundLibrary(manifest, SOUND_LIBRARY_MANIFEST_URL);
+          if (!soundLibraryItems.length) {
+            throw new Error("manifest_empty");
+          }
+          renderSoundLibrary();
+          setSoundLibraryStatus(`Loaded ${soundLibraryItems.length} sound(s).`);
+        } catch (e) {
+          try {
+            setSoundLibraryStatus("Manifest missing. Loading directly from GitHub folder...");
+            const resp = await fetchWithTimeout(SOUND_LIBRARY_GITHUB_API_URL);
+            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+            const contents = await resp.json();
+            soundLibraryItems = parseGithubSoundContents(contents);
+            renderSoundLibrary();
+            if (!soundLibraryItems.length) {
+              setSoundLibraryStatus("No .wav files found in GitHub sounds folder.");
+            } else {
+              setSoundLibraryStatus(`Loaded ${soundLibraryItems.length} sound(s) from GitHub folder.`);
+            }
+          } catch (fallbackErr) {
+            setSoundLibraryStatus(`Load failed: ${fallbackErr.message}`);
+            soundLibraryEmpty.style.display = "block";
+            soundLibraryEmpty.textContent = "Could not load sound library.";
+          }
+        }
+      }
+
+      async function importLibrarySound(item) {
+        if (!isDeviceConnected()) {
+          setSoundLibraryStatus("Connect to device first.");
+          return;
+        }
+        if (isWavUploadBusy) {
+          setSoundLibraryStatus("Upload already in progress.");
+          return;
+        }
+
+        isWavUploadBusy = true;
+        updateLibraryImportButtons();
+        btnWavUpload.disabled = true;
+
+        try {
+          setSoundLibraryStatus(`Downloading ${item.fileName}...`);
+          const resp = await fetchWithTimeout(item.downloadUrl, 30000);
+          if (!resp.ok) throw new Error(`Download failed: HTTP ${resp.status}`);
+          const wavBuffer = await resp.arrayBuffer();
+          setSoundLibraryStatus(`Importing ${item.fileName}...`);
+          await uploadWavArrayBuffer(item.fileName, wavBuffer);
+          setSoundLibraryStatus(`Imported: ${item.fileName}`);
+          await requestFileList();
+        } catch (e) {
+          setSoundLibraryStatus(`Import failed: ${e.message}`);
+        } finally {
+          isWavUploadBusy = false;
+          btnWavUpload.disabled = !isDeviceConnected();
+          updateLibraryImportButtons();
+        }
       }
 
       // === Controls enable/disable ===
@@ -1075,7 +1428,9 @@
       // === Stomp button ===
       btnStomp.onclick = async () => {
         await sendMidiCC(0, 83, 100);
-        log("Manual stomp: CC83 vel=100");
+        await new Promise(resolve => setTimeout(resolve, 25));
+        await sendMidiCC(0, 83, 0);
+        log("Manual stomp: CC83 vel=100 then release");
       };
 
       // === Auto button ===
@@ -1546,14 +1901,15 @@
         await writePayload(new Uint8Array([0x55,0x45]), { withoutResponse: false });
       }
 
-      async function uploadWavFileWindowed(file) {
-        const fw    = new Uint8Array(await file.arrayBuffer());
+      async function uploadWavArrayBuffer(fileName, arrayBuffer) {
+        const fw    = new Uint8Array(arrayBuffer);
         const total = fw.length;
-        log(`WAV: ${file.name} (${(total/1024).toFixed(1)} KB)`);
-        wavStatus.textContent = `Uploading: ${file.name}…`;
+        if (!total) throw new Error("empty wav file");
+        log(`WAV: ${fileName} (${(total/1024).toFixed(1)} KB)`);
+        wavStatus.textContent = `Uploading: ${fileName}…`;
         setProgress(0);
 
-        await sendUS(file.name);
+        await sendUS(fileName);
         await waitForNotify(s => s.includes("us_ok"), 4000);
 
         let resolveUd      = null;
@@ -1607,8 +1963,12 @@
         await sendUE();
         await waitForNotify(s => s.includes("ue_ok"), 5000);
         setProgress(100);
-        wavStatus.textContent = `Uploaded: ${file.name}`;
-        log(`WAV done: ${file.name}`);
+        wavStatus.textContent = `Uploaded: ${fileName}`;
+        log(`WAV done: ${fileName}`);
+      }
+
+      async function uploadWavFileWindowed(file) {
+        await uploadWavArrayBuffer(file.name, await file.arrayBuffer());
       }
 
       // === File list ===
@@ -1717,6 +2077,9 @@
 
       btnWavUpload.onclick = async () => {
         if (!wavFile.files || wavFile.files.length===0) { log("Select .wav files first."); return; }
+        if (isWavUploadBusy) { setSoundLibraryStatus("Upload already in progress."); return; }
+        isWavUploadBusy = true;
+        updateLibraryImportButtons();
         btnWavUpload.disabled = true;
         const files = [...wavFile.files];
         try {
@@ -1731,7 +2094,20 @@
         } catch(e) {
           log("ERROR WAV: "+e.message);
           wavStatus.textContent = `Error: ${e.message}`;
-        } finally { btnWavUpload.disabled = false; }
+        } finally {
+          isWavUploadBusy = false;
+          btnWavUpload.disabled = !isDeviceConnected();
+          updateLibraryImportButtons();
+        }
+      };
+
+      btnLoadSoundLibrary.onclick = async () => {
+        btnLoadSoundLibrary.disabled = true;
+        try {
+          await loadSoundLibrary();
+        } finally {
+          btnLoadSoundLibrary.disabled = false;
+        }
       };
 
       btnUpload.onclick = async () => {
@@ -1825,7 +2201,10 @@
             btnCompact.disabled    = true;
             btnFormat.disabled     = true;
             btnScanEspnow.disabled = true;
+            if (btnLoadSoundLibrary) btnLoadSoundLibrary.disabled = false;
             enableControls(false);
+            updateLibraryImportButtons();
+            stopSoundPreview();
             lastNotify    = "";
             notifyHandler = null;
             bootReady     = false;
@@ -1874,7 +2253,9 @@
           btnCompact.disabled    = false;
           btnFormat.disabled     = false;
           btnScanEspnow.disabled = false;
+          if (btnLoadSoundLibrary) btnLoadSoundLibrary.disabled = false;
           enableControls(true);
+          updateLibraryImportButtons();
 
           log("Connected!");
           lastNotify = "";
