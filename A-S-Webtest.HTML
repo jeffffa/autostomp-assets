@@ -36,7 +36,7 @@
       padding: 12px 14px;
       background-color: #121212;
       color: #ffffff;
-      max-width: 520px;
+      max-width: 980px;
     }
 
     h2 {
@@ -128,10 +128,27 @@
     .tabs {
       display: flex;
       gap: 4px;
-      margin: 0 0 12px;
+      margin: 0;
       background: #1a1a1a;
       padding: 4px;
       border-radius: 12px;
+    }
+
+    .update-indicator {
+      display: none;
+      margin: 8px 0 12px;
+      padding: 8px 10px;
+      border-radius: 9px;
+      border: 1px solid #2f6a3a;
+      background: linear-gradient(145deg, #172b1a, #112014);
+      color: #b4ffbe;
+      font-size: 0.82em;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .update-indicator.show {
+      display: block;
     }
 
     .tab-btn {
@@ -381,11 +398,45 @@
     }
 
     /* ---- File list ---- */
+    .sound-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .sound-columns .card {
+      margin: 0;
+    }
+
+    @media (max-width: 820px) {
+      .sound-columns {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .update-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .update-columns .card {
+      margin: 0;
+    }
+
+    @media (max-width: 820px) {
+      .update-columns {
+        grid-template-columns: 1fr;
+      }
+    }
+
     #fileList {
       list-style: none;
       padding: 0;
       margin: 0 0 8px;
-      max-height: 270px;
+      max-height: 252px;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
     }
@@ -569,18 +620,22 @@
     .sound-library-list {
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      margin-top: 8px;
+      gap: 3px;
+      margin: 8px 0 0;
+      max-height: 252px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .sound-library-row {
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 8px 10px;
+      height: 48px;
+      padding: 0 10px;
       background: #232323;
       border: 1px solid #333;
-      border-radius: 10px;
+      border-radius: 7px;
     }
 
     .sound-library-meta {
@@ -669,6 +724,7 @@
     <button class="tab-btn" id="btnTab3" onclick="openTab('tab3')">Settings</button>
     <button class="tab-btn" id="btnTab4" onclick="openTab('tab4')">Update</button>
   </div>
+  <div id="globalUpdateIndicator" class="update-indicator">Update available. Open Update tab.</div>
 
   <!-- Tab 1: Control -->
   <div id="tab1" class="tab-content active">
@@ -725,12 +781,27 @@
   <!-- Tab 2: Sound -->
   <div id="tab2" class="tab-content">
 
-    <!-- WAV file list -->
-    <div class="card">
-      <h3>WAV Files on Device</h3>
-      <div id="fileListEmpty" class="muted">Press "Refresh" to load file list.</div>
-      <ul id="fileList"></ul>
-      <button id="btnListFiles" disabled class="btn-full">Refresh List</button>
+    <div class="sound-columns">
+      <!-- WAV file list -->
+      <div class="card">
+        <h3>WAV Files on Device</h3>
+        <div id="fileListEmpty" class="muted">Press "Refresh" to load file list.</div>
+        <ul id="fileList"></ul>
+        <button id="btnListFiles" disabled class="btn-full">Refresh List</button>
+      </div>
+
+      <div class="card" id="soundLibraryCard">
+        <h3>Sound Library</h3>
+        <div class="muted" style="margin-bottom:8px;">
+          Preview sounds from our server and import directly to Footloose.
+        </div>
+        <div class="update-actions">
+          <button id="btnLoadSoundLibrary" class="btn-full btn-compact" style="flex:1;">Load Library</button>
+        </div>
+        <div id="soundLibraryStatus" class="muted" style="margin-top:8px;">Press Load Library.</div>
+        <div id="soundLibraryEmpty" class="muted sound-library-empty">No sounds loaded.</div>
+        <div id="soundLibraryList" class="sound-library-list"></div>
+      </div>
     </div>
 
     <!-- WAV upload -->
@@ -744,19 +815,6 @@
         <button id="btnWavUpload" disabled class="btn-full">Upload WAV</button>
       </div>
       <div id="wavStatus" class="muted" style="margin-top:8px;"></div>
-    </div>
-
-    <div class="card" id="soundLibraryCard">
-      <h3>Sound Library</h3>
-      <div class="muted" style="margin-bottom:8px;">
-        Preview sounds from GitHub and import directly to Footloose.
-      </div>
-      <div class="update-actions">
-        <button id="btnLoadSoundLibrary" class="btn-full btn-compact" style="flex:1;">Load Library</button>
-      </div>
-      <div id="soundLibraryStatus" class="muted" style="margin-top:8px;">Press Load Library.</div>
-      <div id="soundLibraryEmpty" class="muted sound-library-empty">No sounds loaded.</div>
-      <div id="soundLibraryList" class="sound-library-list"></div>
     </div>
 
   </div>
@@ -790,6 +848,7 @@
 
   <!-- Tab 4: Update -->
   <div id="tab4" class="tab-content">
+    <div class="update-columns">
     <div class="card" id="fwUpdateCard">
       <h3>Footloose Update</h3>
       <div class="muted" style="margin-bottom:10px;">
@@ -845,6 +904,7 @@
       </div>
       <div id="espOtaStatus" class="muted" style="margin-top:8px;">Select .bin and press Update ESP32.</div>
       <div id="fwVersion" class="muted" style="margin-top:8px;">Firmware: — | Slot: —</div>
+    </div>
     </div>
   </div>
 
@@ -936,6 +996,7 @@
       const updateBanner = document.getElementById("updateBanner");
       const updateTitle = document.getElementById("updateTitle");
       const updateMeta = document.getElementById("updateMeta");
+      const globalUpdateIndicator = document.getElementById("globalUpdateIndicator");
 
       function log(s) { console.log(s); }
 
@@ -1021,6 +1082,13 @@
       function setUpdateAccent(cardEl, installBtn, on) {
         cardEl.classList.toggle("has-update", !!on);
         installBtn.classList.toggle("attention", !!on);
+        refreshGlobalUpdateIndicator();
+      }
+
+      function refreshGlobalUpdateIndicator() {
+        if (!globalUpdateIndicator) return;
+        const hasAnyUpdate = fwUpdateCard.classList.contains("has-update") || espOtaCard.classList.contains("has-update");
+        globalUpdateIndicator.classList.toggle("show", hasAnyUpdate);
       }
 
       function parseUpdateEntry(manifest, kind) {
@@ -1122,7 +1190,7 @@
             return {
               id: `gh_${idx}`,
               label,
-              description: "GitHub folder",
+              description: "Server library",
               fileName,
               downloadUrl: item.download_url,
               previewUrl: item.download_url,
@@ -1257,16 +1325,16 @@
           setSoundLibraryStatus(`Loaded ${soundLibraryItems.length} sound(s).`);
         } catch (e) {
           try {
-            setSoundLibraryStatus("Manifest missing. Loading directly from GitHub folder...");
+            setSoundLibraryStatus("Manifest missing. Loading directly from server folder...");
             const resp = await fetchWithTimeout(SOUND_LIBRARY_GITHUB_API_URL);
             if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
             const contents = await resp.json();
             soundLibraryItems = parseGithubSoundContents(contents);
             renderSoundLibrary();
             if (!soundLibraryItems.length) {
-              setSoundLibraryStatus("No .wav files found in GitHub sounds folder.");
+              setSoundLibraryStatus("No .wav files found in server sounds folder.");
             } else {
-              setSoundLibraryStatus(`Loaded ${soundLibraryItems.length} sound(s) from GitHub folder.`);
+              setSoundLibraryStatus(`Loaded ${soundLibraryItems.length} sound(s) from server folder.`);
             }
           } catch (fallbackErr) {
             setSoundLibraryStatus(`Load failed: ${fallbackErr.message}`);
