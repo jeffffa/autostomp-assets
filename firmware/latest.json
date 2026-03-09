@@ -3,6 +3,18 @@
     "current_version": "0.1.5",
     "releases": [
       {
+        "version": "0.1.2",
+        "bin_url": "https://raw.githubusercontent.com/jeffffa/site-test/main/firmware/esp32/esp32-v0.1.2.bin",
+        "release_date": "2026-03-04",
+        "notes": "Earlier ESP32 firmware release."
+      },
+      {
+        "version": "0.1.4",
+        "bin_url": "https://raw.githubusercontent.com/jeffffa/site-test/main/firmware/esp32/esp32-v0.1.4.bin",
+        "release_date": "2026-03-04",
+        "notes": "ESP32 OTA update before 0.1.5."
+      },
+      {
         "version": "0.1.5",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/site-test/main/firmware/esp32/esp32-v0.1.5.bin",
         "release_date": "2026-03-09",
@@ -15,7 +27,13 @@
     "releases": [
       {
         "version": "0.0.1",
-        "bin_url": "https://raw.githubusercontent.com/jeffffa/site-test/main/firmware/autostomp/autostomp-v1.0.1.bin",
+        "bin_url": "https://raw.githubusercontent.com/jeffffa/site-test/main/firmware/autostomp/autostomp-v0.0.1.bin",
+        "release_date": "2026-03-04",
+        "notes": "Initial firmware release."
+      },
+      {
+        "version": "1.0.0",
+        "bin_url": "https://raw.githubusercontent.com/jeffffa/site-test/main/firmware/autostomp/autostomp-v1.0.0.bin",
         "release_date": "2026-03-04",
         "notes": "No description available."
       }
