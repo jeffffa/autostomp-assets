@@ -528,6 +528,44 @@
       margin-top: 8px;
     }
 
+    .version-picker {
+      margin-top: 8px;
+    }
+
+    .version-picker label {
+      display: block;
+      margin-bottom: 5px;
+      color: #666;
+      font-size: 0.72em;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .version-picker select {
+      width: 100%;
+      min-height: 38px;
+      border-radius: 8px;
+      border: 1px solid #444;
+      background: #252525;
+      color: #ddd;
+      padding: 8px 10px;
+      font-size: 0.9em;
+    }
+
+    .release-notes {
+      margin-top: 8px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid #2d2d2d;
+      background: #171717;
+      color: #888;
+      font-size: 0.82em;
+      min-height: 60px;
+      white-space: pre-wrap;
+      line-height: 1.35;
+    }
+
     .update-banner {
       display: none;
       margin-top: 8px;
@@ -704,6 +742,59 @@
       color: #666;
       margin-top: 3px;
     }
+
+    /* ---- BT MIDI status ---- */
+    .bt-midi-ok   { color: #6dff6d; }
+    .bt-midi-warn { color: #ffb347; }
+    .bt-midi-err  { color: #f88; }
+
+    /* ---- BT MIDI device list ---- */
+    .bt-midi-device-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 48px;
+      padding: 0 10px;
+      margin: 3px 0;
+      background: #252525;
+      border: 1px solid #333;
+      border-radius: 7px;
+    }
+
+    .bt-midi-device-row.active {
+      background: #122012;
+      border-color: #2a5c2a;
+    }
+
+    .bt-midi-device-meta {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .bt-midi-device-name {
+      font-size: 0.9em;
+      font-weight: 600;
+      color: #f0f0f0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .bt-midi-device-row.active .bt-midi-device-name { color: #6dff6d; }
+
+    .bt-midi-device-mac {
+      font-size: 0.75em;
+      color: #666;
+      font-family: monospace;
+    }
+
+    .bt-midi-connect-btn {
+      min-height: 34px;
+      padding: 4px 12px;
+      font-size: 0.82em;
+      margin: 0;
+      flex-shrink: 0;
+    }
   </style>
 </head>
 
@@ -844,6 +935,17 @@
         <button id="btnFormat"  disabled style="flex:1;margin:0;color:#f88;border-color:#622;">Format FS</button>
       </div>
     </div>
+
+    <!-- BT MIDI pairing -->
+    <div class="card disabled" id="btMidiCard">
+      <h3>BT MIDI Controller</h3>
+      <div id="btMidiStatus" class="muted">Not paired.</div>
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <button id="btnBtMidiScan"   disabled style="flex:1;margin:0;">Scan</button>
+        <button id="btnBtMidiForget" disabled style="flex:1;margin:0;color:#f88;border-color:#622;">Forget</button>
+      </div>
+      <div id="btMidiDeviceList" style="margin-top:8px;display:none;"></div>
+    </div>
   </div>
 
   <!-- Tab 4: Update -->
@@ -870,6 +972,13 @@
         <button id="btnCheckFwUpdate" disabled class="btn-full btn-compact" style="flex:1;">Check Update</button>
         <button id="btnInstallFwUpdate" disabled class="btn-full btn-compact" style="flex:1;">Install</button>
       </div>
+      <div class="version-picker">
+        <label for="fwUpdateVersionSelect">Version</label>
+        <select id="fwUpdateVersionSelect" disabled>
+          <option value="">Press Check Update</option>
+        </select>
+      </div>
+      <div id="fwUpdateNotes" class="release-notes">No release notes yet.</div>
       <div id="fwUpdateStatus" class="muted" style="margin-top:8px;">Press Check Update.</div>
       <div class="upload-section">
         <input id="fwFile" type="file" accept=".bin,application/octet-stream" />
@@ -897,6 +1006,13 @@
         <button id="btnCheckUpdate" disabled class="btn-full btn-compact" style="flex:1;">Check Update</button>
         <button id="btnInstallUpdate" disabled class="btn-full btn-compact" style="flex:1;">Install</button>
       </div>
+      <div class="version-picker">
+        <label for="espUpdateVersionSelect">Version</label>
+        <select id="espUpdateVersionSelect" disabled>
+          <option value="">Press Check Update</option>
+        </select>
+      </div>
+      <div id="updateNotes" class="release-notes">No release notes yet.</div>
       <div id="updateStatus" class="muted" style="margin-top:8px;">Press Check Update.</div>
       <div class="upload-section">
         <input id="espOtaFile" type="file" accept=".bin,application/octet-stream" />
@@ -967,12 +1083,19 @@
       const btnClearMac    = document.getElementById("btnClearMac");
       const btnScanEspnow  = document.getElementById("btnScanEspnow");
       const macStatus      = document.getElementById("macStatus");
+      const btMidiCard       = document.getElementById("btMidiCard");
+      const btMidiStatusEl   = document.getElementById("btMidiStatus");
+      const btnBtMidiScan    = document.getElementById("btnBtMidiScan");
+      const btnBtMidiForget  = document.getElementById("btnBtMidiForget");
+      const btMidiDeviceList = document.getElementById("btMidiDeviceList");
+      let btMidiFoundDevices = []; // {type, mac, rssi, name}
+      let btMidiConnectedMac = "";
       const tempoSlider  = document.getElementById("tempoSlider");
       const btnStomp     = document.getElementById("btnStomp");
       const btnSoundPrev = document.getElementById("btnSoundPrev");
       const btnSoundNext = document.getElementById("btnSoundNext");
       const soundNameEl  = document.getElementById("soundName");
-      const controlCards = ["tempoCard","soundCard","autoCard","stompCard","espnowCard"].map(id => document.getElementById(id));
+      const controlCards = ["tempoCard","soundCard","autoCard","stompCard","espnowCard","btMidiCard"].map(id => document.getElementById(id));
       const btnCompact   = document.getElementById("btnCompact");
       const btnFormat    = document.getElementById("btnFormat");
       const fsStatus     = document.getElementById("fsStatus");
@@ -996,6 +1119,10 @@
       const updateBanner = document.getElementById("updateBanner");
       const updateTitle = document.getElementById("updateTitle");
       const updateMeta = document.getElementById("updateMeta");
+      const updateNotes = document.getElementById("updateNotes");
+      const espUpdateVersionSelect = document.getElementById("espUpdateVersionSelect");
+      const fwUpdateNotes = document.getElementById("fwUpdateNotes");
+      const fwUpdateVersionSelect = document.getElementById("fwUpdateVersionSelect");
       const globalUpdateIndicator = document.getElementById("globalUpdateIndicator");
 
       function log(s) { console.log(s); }
@@ -1027,6 +1154,9 @@
       let currentFwVersion = null;
       let pendingEspUpdate = null;
       let pendingFwUpdate = null;
+      let currentFootlooseVersion = "";
+      let espReleaseOptions = [];
+      let fwReleaseOptions = [];
       let soundLibraryItems = [];
       let soundPreviewAudio = null;
       let activePreviewUrl = null;
@@ -1109,6 +1239,88 @@
           releaseDate: formatReleaseDate(node.release_date || node.date || node.published_at || node.released_at),
           currentVersion: String(node.current_version || src.stomp_current_version || "").trim(),
         };
+      }
+
+      function normalizeReleaseList(rawList, fallbackNode = {}, fallbackRoot = {}) {
+        const list = Array.isArray(rawList) ? rawList : [];
+        const releases = list.map((entry) => {
+          const src = entry && typeof entry === "object" ? entry : {};
+          const version = String(src.version || fallbackNode.version || fallbackRoot.version || "").trim();
+          const binUrl = String(src.bin_url || src.url || fallbackNode.bin_url || fallbackNode.url || fallbackRoot.bin_url || "").trim();
+          const releaseDate = formatReleaseDate(src.release_date || src.date || src.published_at || src.released_at || fallbackNode.release_date || fallbackRoot.release_date);
+          const notes = String(src.notes || src.description || src.changelog || src.whats_new || "").trim();
+          if (!version || !binUrl) return null;
+          return { version, binUrl, releaseDate, notes: notes || "No description available." };
+        }).filter(Boolean);
+
+        const dedup = [];
+        const seen = new Set();
+        for (const r of releases) {
+          const key = `${r.version}|${r.binUrl}`;
+          if (seen.has(key)) continue;
+          seen.add(key);
+          dedup.push(r);
+        }
+
+        dedup.sort((a, b) => compareSemver(b.version, a.version));
+        return dedup;
+      }
+
+      function parseReleaseManifest(manifest, kind) {
+        const src = manifest && typeof manifest === "object" ? manifest : {};
+        if (kind === "esp32") {
+          const node = src.esp32 || src.ota || src;
+          const releasesRaw = node.releases || src.releases || [node];
+          const releases = normalizeReleaseList(releasesRaw, node, src);
+          const currentVersion = String(node.current_version || src.current_version || currentFwVersion || "").trim();
+          return { currentVersion, releases };
+        }
+
+        const node = src.autostomp || src.stomp || src.firmware || {};
+        const releasesRaw = node.releases || src.releases || [node];
+        const releases = normalizeReleaseList(releasesRaw, node, src);
+        const currentVersion = String(node.current_version || src.stomp_current_version || src.current_version || "").trim();
+        return { currentVersion, releases };
+      }
+
+      function fillVersionSelect(selectEl, releases, currentVersion) {
+        if (!selectEl) return;
+        selectEl.innerHTML = "";
+        if (!releases.length) {
+          const op = document.createElement("option");
+          op.value = "";
+          op.textContent = "No versions found";
+          selectEl.appendChild(op);
+          selectEl.disabled = true;
+          return;
+        }
+        releases.forEach((rel, idx) => {
+          const op = document.createElement("option");
+          op.value = String(idx);
+          const isCurrent = currentVersion && compareSemver(rel.version, currentVersion) === 0;
+          op.textContent = `${rel.version} (${rel.releaseDate})${isCurrent ? " - current" : ""}`;
+          selectEl.appendChild(op);
+        });
+        selectEl.disabled = false;
+      }
+
+      function pickDefaultReleaseIndex(releases, currentVersion) {
+        if (!releases.length) return -1;
+        if (!currentVersion) return 0;
+        const newerIdx = releases.findIndex(r => compareSemver(currentVersion, r.version) < 0);
+        if (newerIdx >= 0) return newerIdx;
+        const currentIdx = releases.findIndex(r => compareSemver(currentVersion, r.version) === 0);
+        if (currentIdx >= 0) return currentIdx;
+        return 0;
+      }
+
+      function setReleaseNotes(targetEl, rel) {
+        if (!targetEl) return;
+        if (!rel) {
+          targetEl.textContent = "No release notes yet.";
+          return;
+        }
+        targetEl.textContent = `${rel.version} (${rel.releaseDate})\n${rel.notes}`;
       }
 
       function isDeviceConnected() {
@@ -1547,6 +1759,65 @@
         btnScanEspnow.disabled = false;
       };
 
+      // === BT MIDI device list ===
+      function renderBtMidiDeviceList(scanDone) {
+        if (!btMidiFoundDevices.length) {
+          btMidiDeviceList.style.display = "none";
+          btMidiDeviceList.innerHTML = "";
+          return;
+        }
+        btMidiDeviceList.style.display = "block";
+        btMidiDeviceList.innerHTML = "";
+        btMidiFoundDevices.forEach(dev => {
+          const row = document.createElement("div");
+          row.className = "bt-midi-device-row" + (dev.mac === btMidiConnectedMac ? " active" : "");
+
+          const meta = document.createElement("div");
+          meta.className = "bt-midi-device-meta";
+
+          const nameEl = document.createElement("div");
+          nameEl.className = "bt-midi-device-name";
+          nameEl.textContent = dev.name || "(no name)";
+
+          const macEl = document.createElement("div");
+          macEl.className = "bt-midi-device-mac";
+          macEl.textContent = dev.mac + "  " + dev.rssi + " dBm";
+
+          meta.appendChild(nameEl);
+          meta.appendChild(macEl);
+
+          const btn = document.createElement("button");
+          btn.className = "bt-midi-connect-btn";
+          btn.textContent = dev.mac === btMidiConnectedMac ? "Connected" : "Connect";
+          btn.disabled = !scanDone || dev.mac === btMidiConnectedMac;
+          btn.onclick = async () => {
+            btMidiStatusEl.className = "muted";
+            btMidiStatusEl.textContent = "Connecting to " + (dev.name || dev.mac) + "…";
+            renderBtMidiDeviceList(false);
+            await sendCmd(`bt_midi_connect:${dev.type}:${dev.mac}`);
+          };
+
+          row.appendChild(meta);
+          row.appendChild(btn);
+          btMidiDeviceList.appendChild(row);
+        });
+      }
+
+      // === BT MIDI scan ===
+      btnBtMidiScan.onclick = async () => {
+        btMidiStatusEl.className = "muted";
+        btMidiStatusEl.textContent = "Starting scan…";
+        btnBtMidiScan.disabled = true;
+        btMidiFoundDevices = [];
+        renderBtMidiDeviceList(false);
+        await sendCmd("bt_midi_scan");
+      };
+
+      btnBtMidiForget.onclick = async () => {
+        await sendCmd("bt_midi_forget");
+        // bt_midi_forgotten notify will update UI
+      };
+
       async function sendCmd(cmdStr) {
         await writePayload(new TextEncoder().encode(cmdStr));
       }
@@ -1571,9 +1842,15 @@
       async function checkForUpdate() {
         btnInstallUpdate.disabled = true;
         pendingEspUpdate = null;
+        espReleaseOptions = [];
         updateBanner.classList.remove("show");
         setUpdateAccent(espOtaCard, btnInstallUpdate, false);
         updateStatus.textContent = "Checking for updates...";
+        if (espUpdateVersionSelect) {
+          espUpdateVersionSelect.innerHTML = '<option value="">Checking...</option>';
+          espUpdateVersionSelect.disabled = true;
+        }
+        setReleaseNotes(updateNotes, null);
 
         if (!currentFwVersion) await refreshFwInfo();
 
@@ -1587,30 +1864,38 @@
           return;
         }
 
-        const entry = parseUpdateEntry(manifest, "esp32");
-        const latestVersion = entry.version;
-        const binUrl = entry.binUrl;
-        const releaseDate = entry.releaseDate;
-        if (!latestVersion || !binUrl) {
+        const parsed = parseReleaseManifest(manifest, "esp32");
+        espReleaseOptions = parsed.releases;
+        fillVersionSelect(espUpdateVersionSelect, espReleaseOptions, currentFwVersion || parsed.currentVersion);
+        if (!espReleaseOptions.length) {
           updateStatus.textContent = "Manifest missing version or bin_url.";
           return;
         }
 
-        const cmp = compareSemver(currentFwVersion, latestVersion);
+        const idx = pickDefaultReleaseIndex(espReleaseOptions, currentFwVersion || parsed.currentVersion);
+        if (idx < 0) {
+          updateStatus.textContent = "No versions available.";
+          return;
+        }
+        if (espUpdateVersionSelect) espUpdateVersionSelect.value = String(idx);
+        const selected = espReleaseOptions[idx];
+        pendingEspUpdate = selected;
+        setReleaseNotes(updateNotes, selected);
+        updateTitle.textContent = "Selected version";
+        updateMeta.textContent = `Version ${selected.version} | Release ${selected.releaseDate}`;
+        btnInstallUpdate.disabled = false;
+        updateBanner.classList.add("show");
+
+        const cmp = compareSemver(currentFwVersion, selected.version);
         if (cmp < 0) {
-          pendingEspUpdate = { version: latestVersion, binUrl, releaseDate };
-          btnInstallUpdate.disabled = false;
-          updateTitle.textContent = "New update available";
-          updateMeta.textContent = `Version ${latestVersion} | Release ${releaseDate}`;
-          updateBanner.classList.add("show");
           setUpdateAccent(espOtaCard, btnInstallUpdate, true);
-          updateStatus.textContent = `Update available: ${currentFwVersion} -> ${latestVersion}`;
+          updateStatus.textContent = `Update available: ${currentFwVersion} -> ${selected.version}`;
         } else if (cmp === 0) {
+          setUpdateAccent(espOtaCard, btnInstallUpdate, false);
           updateStatus.textContent = `Up to date (${currentFwVersion}).`;
-          updateMeta.textContent = `Version ${latestVersion} | Release ${releaseDate}`;
         } else {
-          updateStatus.textContent = `Device version (${currentFwVersion}) is newer than manifest (${latestVersion}).`;
-          updateMeta.textContent = `Version ${latestVersion} | Release ${releaseDate}`;
+          setUpdateAccent(espOtaCard, btnInstallUpdate, false);
+          updateStatus.textContent = `Selected version (${selected.version}) is older than device (${currentFwVersion}).`;
         }
       }
 
@@ -1649,9 +1934,15 @@
       async function checkForFwUpdate() {
         btnInstallFwUpdate.disabled = true;
         pendingFwUpdate = null;
+        fwReleaseOptions = [];
         fwUpdateBanner.classList.remove("show");
         setUpdateAccent(fwUpdateCard, btnInstallFwUpdate, false);
         fwUpdateStatus.textContent = "Checking for updates...";
+        if (fwUpdateVersionSelect) {
+          fwUpdateVersionSelect.innerHTML = '<option value="">Checking...</option>';
+          fwUpdateVersionSelect.disabled = true;
+        }
+        setReleaseNotes(fwUpdateNotes, null);
 
         let manifest;
         try {
@@ -1663,29 +1954,41 @@
           return;
         }
 
-        const entry = parseUpdateEntry(manifest, "autostomp");
-        if (!entry.version || !entry.binUrl) {
+        const parsed = parseReleaseManifest(manifest, "autostomp");
+        currentFootlooseVersion = parsed.currentVersion || "";
+        fwReleaseOptions = parsed.releases;
+        fillVersionSelect(fwUpdateVersionSelect, fwReleaseOptions, parsed.currentVersion);
+        if (!fwReleaseOptions.length) {
           fwUpdateStatus.textContent = "Manifest missing autostomp version or bin_url.";
           return;
         }
 
-        const cmp = entry.currentVersion ? compareSemver(entry.currentVersion, entry.version) : -1;
+        const idx = pickDefaultReleaseIndex(fwReleaseOptions, parsed.currentVersion);
+        if (idx < 0) {
+          fwUpdateStatus.textContent = "No versions available.";
+          return;
+        }
+        if (fwUpdateVersionSelect) fwUpdateVersionSelect.value = String(idx);
+        const selected = fwReleaseOptions[idx];
+        pendingFwUpdate = selected;
+        setReleaseNotes(fwUpdateNotes, selected);
+        fwUpdateTitle.textContent = "Selected version";
+        fwUpdateMeta.textContent = `Version ${selected.version} | Release ${selected.releaseDate}`;
+        btnInstallFwUpdate.disabled = false;
+        fwUpdateBanner.classList.add("show");
+
+        const cmp = parsed.currentVersion ? compareSemver(parsed.currentVersion, selected.version) : -1;
         if (cmp < 0) {
-          pendingFwUpdate = { version: entry.version, binUrl: entry.binUrl, releaseDate: entry.releaseDate };
-          btnInstallFwUpdate.disabled = false;
-          fwUpdateTitle.textContent = "New update available";
-          fwUpdateMeta.textContent = `Version ${entry.version} | Release ${entry.releaseDate}`;
-          fwUpdateBanner.classList.add("show");
           setUpdateAccent(fwUpdateCard, btnInstallFwUpdate, true);
-          fwUpdateStatus.textContent = entry.currentVersion
-            ? `Update available: ${entry.currentVersion} -> ${entry.version}`
-            : `Update available: ${entry.version}`;
+          fwUpdateStatus.textContent = parsed.currentVersion
+            ? `Update available: ${parsed.currentVersion} -> ${selected.version}`
+            : `Update available: ${selected.version}`;
         } else if (cmp === 0) {
-          fwUpdateStatus.textContent = `Up to date (${entry.currentVersion}).`;
-          fwUpdateMeta.textContent = `Version ${entry.version} | Release ${entry.releaseDate}`;
+          setUpdateAccent(fwUpdateCard, btnInstallFwUpdate, false);
+          fwUpdateStatus.textContent = `Up to date (${parsed.currentVersion}).`;
         } else {
-          fwUpdateStatus.textContent = `Device version (${entry.currentVersion}) is newer than manifest (${entry.version}).`;
-          fwUpdateMeta.textContent = `Version ${entry.version} | Release ${entry.releaseDate}`;
+          setUpdateAccent(fwUpdateCard, btnInstallFwUpdate, false);
+          fwUpdateStatus.textContent = `Selected version (${selected.version}) is older than device (${parsed.currentVersion}).`;
         }
       }
 
@@ -1830,6 +2133,81 @@
         if (notifyHandler) notifyHandler(txt);
         if (txt.startsWith("status ")) parseStatus(txt);
 
+        // BT MIDI central status notifications
+        if (txt === "bt_midi_scanning") {
+          btMidiStatusEl.className = "muted";
+          btMidiStatusEl.textContent = "Scanning… (10s)";
+          btnBtMidiScan.disabled = true;
+          btMidiFoundDevices = [];
+          renderBtMidiDeviceList(false);
+        } else if (txt === "bt_midi_scan_done") {
+          btnBtMidiScan.disabled = false;
+          renderBtMidiDeviceList(true); // enable connect buttons
+          if (!btMidiFoundDevices.length) {
+            btMidiStatusEl.className = "bt-midi-err";
+            btMidiStatusEl.textContent = "No MIDI devices found.";
+          } else {
+            btMidiStatusEl.className = "muted";
+            btMidiStatusEl.textContent = `Found ${btMidiFoundDevices.length} device(s) — tap to connect:`;
+          }
+        } else if (txt.startsWith("bt_midi_found:")) {
+          // bt_midi_found:TYPE:AA:BB:CC:DD:EE:FF:RSSI:NAME
+          const p = txt.split(":");
+          if (p.length >= 9) {
+            const type = parseInt(p[1]);
+            const mac  = p.slice(2, 8).join(":");
+            const rssi = parseInt(p[8]);
+            const name = p.slice(9).join(":").trim();
+            // Deduplicate by MAC
+            if (!btMidiFoundDevices.find(d => d.mac === mac)) {
+              btMidiFoundDevices.push({ type, mac, rssi, name });
+              renderBtMidiDeviceList(false);
+            }
+          }
+        } else if (txt === "bt_midi_connecting") {
+          btMidiStatusEl.className = "muted";
+          btMidiStatusEl.textContent = "Connecting…";
+        } else if (txt === "bt_midi_connect_failed") {
+          btMidiStatusEl.className = "bt-midi-err";
+          btMidiStatusEl.textContent = "Connection failed.";
+          btnBtMidiScan.disabled = false;
+          renderBtMidiDeviceList(true);
+        } else if (txt === "bt_midi_connected") {
+          // full status will follow as bt_midi:connected:MAC
+        } else if (txt === "bt_midi_disconnected") {
+          btMidiConnectedMac = "";
+          btMidiStatusEl.className = "bt-midi-warn";
+          btMidiStatusEl.textContent = "Disconnected (reconnecting…)";
+          renderBtMidiDeviceList(true);
+        } else if (txt === "bt_midi_forgotten") {
+          btMidiConnectedMac = "";
+          btMidiStatusEl.className = "muted";
+          btMidiStatusEl.textContent = "Forgotten — not paired.";
+          btMidiFoundDevices = [];
+          renderBtMidiDeviceList(false);
+          btnBtMidiScan.disabled = false;
+        } else if (txt.startsWith("bt_midi:")) {
+          const parts = txt.split(":");  // bt_midi:state:MAC or bt_midi:none
+          const state = parts[1] || "";
+          const mac   = parts.slice(2).join(":") || "";
+          if (state === "connected") {
+            btMidiConnectedMac = mac;
+            btMidiStatusEl.className = "bt-midi-ok";
+            btMidiStatusEl.textContent = "Connected: " + mac;
+            btnBtMidiScan.disabled = false;
+            renderBtMidiDeviceList(true);
+          } else if (state === "saved") {
+            btMidiStatusEl.className = "bt-midi-warn";
+            btMidiStatusEl.textContent = "Saved (not connected): " + mac;
+            btnBtMidiScan.disabled = false;
+          } else {
+            btMidiConnectedMac = "";
+            btMidiStatusEl.className = "muted";
+            btMidiStatusEl.textContent = "Not paired.";
+            btnBtMidiScan.disabled = false;
+          }
+        }
+
         const remaining = [];
         for (const w of waiters) {
           if (!w.done && w.predicate(txt)) {
@@ -1894,9 +2272,11 @@
       async function sendFDAndWait(chunkU8, sentBefore, maxRetries=40) {
         const expectedOffset = sentBefore + chunkU8.length;
         const expectedAck    = `fd_ok:${expectedOffset}`;
+        // Timeout 20s: Daisy-bootloader blockerar SPI under flash-erase/write
+        // (kan ta flera sekunder per sektor).
         for (let attempt=1; attempt<=maxRetries; attempt++) {
           lastNotify = "";
-          const ackPromise = waitForNotify(s => s===expectedAck || s.includes("fd_busy"), 5000);
+          const ackPromise = waitForNotify(s => s===expectedAck || s.includes("fd_busy"), 20000);
           await sendFD(chunkU8);
           try {
             const resp = await ackPromise;
@@ -2208,6 +2588,58 @@
         }
       };
 
+      if (espUpdateVersionSelect) {
+        espUpdateVersionSelect.onchange = () => {
+          const idx = parseInt(espUpdateVersionSelect.value, 10);
+          if (Number.isNaN(idx) || idx < 0 || idx >= espReleaseOptions.length) return;
+          const selected = espReleaseOptions[idx];
+          pendingEspUpdate = selected;
+          setReleaseNotes(updateNotes, selected);
+          updateTitle.textContent = "Selected version";
+          updateMeta.textContent = `Version ${selected.version} | Release ${selected.releaseDate}`;
+          btnInstallUpdate.disabled = false;
+          updateBanner.classList.add("show");
+          const cmp = compareSemver(currentFwVersion, selected.version);
+          if (cmp < 0) {
+            setUpdateAccent(espOtaCard, btnInstallUpdate, true);
+            updateStatus.textContent = `Update available: ${currentFwVersion} -> ${selected.version}`;
+          } else if (cmp === 0) {
+            setUpdateAccent(espOtaCard, btnInstallUpdate, false);
+            updateStatus.textContent = `Up to date (${currentFwVersion}).`;
+          } else {
+            setUpdateAccent(espOtaCard, btnInstallUpdate, false);
+            updateStatus.textContent = `Selected version (${selected.version}) is older than device (${currentFwVersion}).`;
+          }
+        };
+      }
+
+      if (fwUpdateVersionSelect) {
+        fwUpdateVersionSelect.onchange = () => {
+          const idx = parseInt(fwUpdateVersionSelect.value, 10);
+          if (Number.isNaN(idx) || idx < 0 || idx >= fwReleaseOptions.length) return;
+          const selected = fwReleaseOptions[idx];
+          pendingFwUpdate = selected;
+          setReleaseNotes(fwUpdateNotes, selected);
+          fwUpdateTitle.textContent = "Selected version";
+          fwUpdateMeta.textContent = `Version ${selected.version} | Release ${selected.releaseDate}`;
+          btnInstallFwUpdate.disabled = false;
+          fwUpdateBanner.classList.add("show");
+          const cmp = currentFootlooseVersion ? compareSemver(currentFootlooseVersion, selected.version) : -1;
+          if (cmp < 0) {
+            setUpdateAccent(fwUpdateCard, btnInstallFwUpdate, true);
+            fwUpdateStatus.textContent = currentFootlooseVersion
+              ? `Update available: ${currentFootlooseVersion} -> ${selected.version}`
+              : `Update available: ${selected.version}`;
+          } else if (cmp === 0) {
+            setUpdateAccent(fwUpdateCard, btnInstallFwUpdate, false);
+            fwUpdateStatus.textContent = `Up to date (${currentFootlooseVersion}).`;
+          } else {
+            setUpdateAccent(fwUpdateCard, btnInstallFwUpdate, false);
+            fwUpdateStatus.textContent = `Selected version (${selected.version}) is older than device (${currentFootlooseVersion}).`;
+          }
+        };
+      }
+
       btnCheckUpdate.onclick = async () => {
         if (!device || !device.gatt || !device.gatt.connected) {
           updateStatus.textContent = "Connect to device first.";
@@ -2269,6 +2701,11 @@
             btnCompact.disabled    = true;
             btnFormat.disabled     = true;
             btnScanEspnow.disabled = true;
+            if (btnBtMidiScan)   btnBtMidiScan.disabled   = true;
+            if (btnBtMidiForget) btnBtMidiForget.disabled = true;
+            btMidiFoundDevices = [];
+            btMidiConnectedMac = "";
+            if (btMidiDeviceList) { btMidiDeviceList.style.display = "none"; btMidiDeviceList.innerHTML = ""; }
             if (btnLoadSoundLibrary) btnLoadSoundLibrary.disabled = false;
             enableControls(false);
             updateLibraryImportButtons();
@@ -2286,11 +2723,24 @@
             fwUpdateStatus.textContent = "Press Check Update.";
             fwUpdateBanner.classList.remove("show");
             setUpdateAccent(fwUpdateCard, btnInstallFwUpdate, false);
+            if (fwUpdateVersionSelect) {
+              fwUpdateVersionSelect.innerHTML = '<option value="">Press Check Update</option>';
+              fwUpdateVersionSelect.disabled = true;
+            }
+            setReleaseNotes(fwUpdateNotes, null);
             updateStatus.textContent = "Press Check Update.";
             updateBanner.classList.remove("show");
             setUpdateAccent(espOtaCard, btnInstallUpdate, false);
+            if (espUpdateVersionSelect) {
+              espUpdateVersionSelect.innerHTML = '<option value="">Press Check Update</option>';
+              espUpdateVersionSelect.disabled = true;
+            }
+            setReleaseNotes(updateNotes, null);
             pendingFwUpdate = null;
             pendingEspUpdate = null;
+            fwReleaseOptions = [];
+            espReleaseOptions = [];
+            currentFootlooseVersion = "";
             for (const w of waiters) {
               if (!w.done) { w.done=true; w.reject(new Error("BLE disconnected")); }
             }
@@ -2321,6 +2771,8 @@
           btnCompact.disabled    = false;
           btnFormat.disabled     = false;
           btnScanEspnow.disabled = false;
+          if (btnBtMidiScan)   btnBtMidiScan.disabled   = false;
+          if (btnBtMidiForget) btnBtMidiForget.disabled = false;
           if (btnLoadSoundLibrary) btnLoadSoundLibrary.disabled = false;
           enableControls(true);
           updateLibraryImportButtons();
@@ -2337,6 +2789,10 @@
               macStatus.textContent = `Active: ${addr}`;
             }
           } catch { /* no MAC saved */ }
+          try {
+            await sendCmd("bt_midi_status");
+            // response arrives as bt_midi:state:MAC notify, handled in onNotify
+          } catch { /* ignore */ }
           refreshFwInfo();
 
         } catch(e) {
