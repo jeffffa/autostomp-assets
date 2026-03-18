@@ -2088,10 +2088,11 @@
         }
         console.log("[OTA] XS ok, starting XD");
 
-        // 240 = safe for MTU=256. ASTP packet = 248 bytes, max write = 253. 5 bytes margin.
-        // Requires firmware with OTA_PAYLOAD_MAX=512 (setMTU=256 firmware).
-        const xdChunkSize = 240;
-        const MAX_WINDOW = 6;
+        // fw >= 0.1.6: MTU=517, OTA_PAYLOAD_MAX=512 → safe for 380-byte chunks (ASTP=388, max=509).
+        // fw < 0.1.6:  MTU=185, MAX_PAYLOAD=128  → max 126-byte chunks (ASTP=134, max=182).
+        const newFw = compareSemver(currentFwVersion, "0.1.6") >= 0;
+        const xdChunkSize = newFw ? 380 : 126;
+        const MAX_WINDOW = newFw ? 10 : 6;
         const pending = [];
         let nextSend = 0;
 
@@ -2746,6 +2747,7 @@
 
           device.addEventListener("gattserverdisconnected", () => {
             log("Disconnected.");
+            currentFwVersion = null;
             bleStatusEl.textContent = "Disconnected";
             bleStatusEl.className   = "ble-disconnected";
             btnConnect.disabled    = false;
