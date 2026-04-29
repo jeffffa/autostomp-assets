@@ -1,6 +1,6 @@
 {
   "esp32": {
-    "current_version": "0.2.7",
+    "current_version": "0.2.8",
     "releases": [
       {
         "version": "0.1.2",
@@ -43,6 +43,12 @@
         "bin_url": "https://raw.githubusercontent.com/jeffffa/Autostomp-web/main/firmware/esp32/esp32-v0.2.7.bin",
         "release_date": "2026-04-28",
         "notes": "Fixes Daisy firmware update reliability by matching the ESP32 SPI transaction size to the Daisy bootloader update packet size."
+      },
+      {
+        "version": "0.2.8",
+        "bin_url": "https://raw.githubusercontent.com/jeffffa/Autostomp-web/main/firmware/esp32/esp32-v0.2.8.bin",
+        "release_date": "2026-04-29",
+        "notes": "Adds cumulative ESP32 runtime tracking for diagnostics and telemetry."
       }
     ]
   },
