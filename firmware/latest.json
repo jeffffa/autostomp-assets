@@ -1,6 +1,6 @@
 {
   "esp32": {
-    "current_version": "0.2.15",
+    "current_version": "0.2.16",
     "releases": [
       {
         "version": "0.1.2",
@@ -91,6 +91,12 @@
         "bin_url": "https://raw.githubusercontent.com/jeffffa/site-test/main/firmware/esp32/esp32-v0.2.15.bin",
         "release_date": "2026-05-03",
         "notes": "Moves product statistics into the ESP32: saved battery cycles with min/max voltage, adapter sessions, lifetime runtime, cached storage stats, and Auto use count."
+      },
+      {
+        "version": "0.2.16",
+        "bin_url": "https://raw.githubusercontent.com/jeffffa/site-test/main/firmware/esp32/esp32-v0.2.16.bin",
+        "release_date": "2026-05-03",
+        "notes": "Stores up to 500 unsynced battery cycles on the ESP32 using a compact queue, matching a typical Li-ion battery lifetime."
       }
     ]
   },
