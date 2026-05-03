@@ -1,6 +1,6 @@
 {
   "esp32": {
-    "current_version": "0.2.20",
+    "current_version": "0.2.21",
     "releases": [
       {
         "version": "0.1.2",
@@ -121,6 +121,12 @@
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.20.bin",
         "release_date": "2026-05-03",
         "notes": "Defers automatic saved BT MIDI reconnect while the app is connected, avoiding the initial Web Bluetooth freeze from blocking connect timeouts."
+      },
+      {
+        "version": "0.2.21",
+        "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.21.bin",
+        "release_date": "2026-05-03",
+        "notes": "Fixes battery voltage ADC calibration and adds battery percentage to the SPI message sent to Daisy, so the pedal display shows an accurate charge level."
       }
     ]
   },
