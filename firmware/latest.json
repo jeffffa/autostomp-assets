@@ -1,6 +1,6 @@
 {
   "esp32": {
-    "current_version": "0.2.14",
+    "current_version": "0.2.15",
     "releases": [
       {
         "version": "0.1.2",
@@ -85,6 +85,12 @@
         "bin_url": "https://raw.githubusercontent.com/jeffffa/site-test/main/firmware/esp32/esp32-v0.2.14.bin",
         "release_date": "2026-05-03",
         "notes": "Improves saved battery and adapter session handling across power cycles."
+      },
+      {
+        "version": "0.2.15",
+        "bin_url": "https://raw.githubusercontent.com/jeffffa/site-test/main/firmware/esp32/esp32-v0.2.15.bin",
+        "release_date": "2026-05-03",
+        "notes": "Moves product statistics into the ESP32: saved battery cycles with min/max voltage, adapter sessions, lifetime runtime, cached storage stats, and Auto use count."
       }
     ]
   },
