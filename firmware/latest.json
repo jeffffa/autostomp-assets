@@ -106,7 +106,7 @@
       },
       {
         "version": "0.2.18",
-        "bin_url": "https://raw.githubusercontent.com/jeffffa/site-test/main/firmware/esp32/esp32-v0.2.18.bin",
+        "bin_url": "https://raw.githubusercontent.com/jeffffa/Autostomp-web/main/firmware/esp32/esp32-v0.2.18.bin",
         "release_date": "2026-05-03",
         "notes": "Sends ESP32 battery voltage, percentage, and charge status to Daisy over SPI so the pedal display can use the ESP32 battery measurement."
       }
@@ -141,7 +141,7 @@
       },
       {
         "version": "1.0.4",
-        "bin_url": "https://raw.githubusercontent.com/jeffffa/site-test/main/firmware/autostomp/AutoStomp-v1.0.4.bin",
+        "bin_url": "https://raw.githubusercontent.com/jeffffa/Autostomp-web/main/firmware/autostomp/AutoStomp-v1.0.4.bin",
         "release_date": "2026-05-03",
         "notes": "Uses the ESP32 battery reading for the existing battery icon on the Daisy display."
       }
