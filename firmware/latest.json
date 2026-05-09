@@ -1,6 +1,6 @@
 {
   "esp32": {
-    "current_version": "0.2.24",
+    "current_version": "0.2.25",
     "releases": [
       {
         "version": "0.1.2",
@@ -145,6 +145,12 @@
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.24.bin",
         "release_date": "2026-05-05",
         "notes": "Improves low-latency MIDI handling over BLE/ESP-NOW, reduces heartbeat traffic while connected, and clears legacy ESP32 stats storage after the stats model moved out of bridge firmware."
+      },
+      {
+        "version": "0.2.25",
+        "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.25.bin",
+        "release_date": "2026-05-09",
+        "notes": "Adds a newer bridge release for the iPhone app, including the latest BLE bridge fixes and updated device identification in the app picker."
       }
     ]
   },
