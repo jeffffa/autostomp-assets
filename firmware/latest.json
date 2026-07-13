@@ -1,6 +1,6 @@
 {
   "esp32": {
-    "current_version": "0.2.26",
+    "current_version": "0.2.27",
     "releases": [
       {
         "version": "0.1.2",
@@ -157,6 +157,12 @@
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.25.bin",
         "release_date": "2026-05-09",
         "notes": "Adds a newer bridge release for the iPhone app, including the latest BLE bridge fixes and updated device identification in the app picker."
+      },
+      {
+        "version": "0.2.27",
+        "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.27.bin",
+        "release_date": "2026-07-13",
+        "notes": "Adds BLE app pairing and authentication, improves Daisy firmware and sound upload acknowledgements, stores runtime and battery-life statistics more reliably, and expands BQ25792 charger configuration, temperature, and fault monitoring."
       }
     ]
   },
