@@ -167,7 +167,7 @@
     ]
   },
   "autostomp": {
-    "current_version": "1.0.4",
+    "current_version": "1.0.5",
     "releases": [
       {
         "version": "0.0.1",
@@ -198,6 +198,12 @@
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/autostomp/AutoStomp-v1.0.4.bin",
         "release_date": "2026-05-03",
         "notes": "Uses the ESP32 battery reading for the existing battery icon on the Daisy display."
+      },
+      {
+        "version": "1.0.5",
+        "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/autostomp/AutoStomp-v1.0.5.bin",
+        "release_date": "2026-07-13",
+        "notes": "Moves sound and settings storage to QSPI, improves firmware and sound upload stability, pauses pedal processing during uploads, and fixes sound switching and QSPI reliability."
       }
     ]
   }
