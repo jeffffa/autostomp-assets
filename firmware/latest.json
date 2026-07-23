@@ -173,7 +173,7 @@
     ]
   },
   "autostomp": {
-    "current_version": "1.0.5",
+    "current_version": "1.0.6",
     "releases": [
       {
         "version": "0.0.1",
@@ -210,6 +210,12 @@
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/autostomp/AutoStomp-v1.0.5.bin",
         "release_date": "2026-07-13",
         "notes": "Moves sound and settings storage to QSPI, improves firmware and sound upload stability, pauses pedal processing during uploads, and fixes sound switching and QSPI reliability."
+      },
+      {
+        "version": "1.0.6",
+        "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/autostomp/AutoStomp-v1.0.6.bin",
+        "release_date": "2026-07-23",
+        "notes": "Publishes the hardware-tested blocking-SPI Autostomp2000 build paired with the event-driven ESP32 bridge for stable audio operation."
       }
     ]
   }
