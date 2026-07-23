@@ -173,7 +173,7 @@
     ]
   },
   "autostomp": {
-    "current_version": "1.0.6",
+    "current_version": "1.0.7",
     "releases": [
       {
         "version": "0.0.1",
@@ -216,6 +216,12 @@
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/autostomp/AutoStomp-v1.0.6.bin",
         "release_date": "2026-07-23",
         "notes": "Publishes the hardware-tested blocking-SPI Autostomp2000 build paired with the event-driven ESP32 bridge for stable audio operation."
+      },
+      {
+        "version": "1.0.7",
+        "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/autostomp/AutoStomp-v1.0.7.bin",
+        "release_date": "2026-07-23",
+        "notes": "Publishes the standard Autostomp2000 firmware produced directly by the project Makefile."
       }
     ]
   }
