@@ -1,6 +1,6 @@
 {
   "esp32": {
-    "current_version": "0.2.29",
+    "current_version": "0.2.30",
     "releases": [
       {
         "version": "0.1.2",
@@ -169,6 +169,12 @@
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.29.bin",
         "release_date": "2026-07-26",
         "notes": "Keeps event-driven SPI during normal operation while restoring continuous Daisy bootloader polling during firmware updates, preventing update timeouts and capturing final verification responses."
+      },
+      {
+        "version": "0.2.30",
+        "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.30.bin",
+        "release_date": "2026-07-31",
+        "notes": "Introduces NVS schema v5 with minute-based runtime statistics, 15-minute usage sessions, separate USB-C and DC connection counters, simplified battery lifetime tracking, and removal of obsolete battery history and cached storage data."
       }
     ]
   },
