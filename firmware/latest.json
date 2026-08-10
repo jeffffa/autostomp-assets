@@ -1,6 +1,6 @@
 {
   "esp32": {
-    "current_version": "0.2.31",
+    "current_version": "0.2.32",
     "releases": [
       {
         "version": "0.1.2",
@@ -181,6 +181,12 @@
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.31.bin",
         "release_date": "2026-07-31",
         "notes": "Improves full-charge reporting and remembers completed charging across adapter reconnections and power cycles, preventing unnecessary recharging until the 2S battery drops below 8.20 V."
+      },
+      {
+        "version": "0.2.32",
+        "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.32.bin",
+        "release_date": "2026-08-10",
+        "notes": "Reduces repeated battery and adapter telemetry by ignoring raw voltage noise and sending adapter runtime only when its minute value changes."
       }
     ]
   },
