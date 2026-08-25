@@ -1,6 +1,6 @@
 {
   "esp32": {
-    "current_version": "0.2.32",
+    "current_version": "0.2.61",
     "releases": [
       {
         "version": "0.1.2",
@@ -187,6 +187,12 @@
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.32.bin",
         "release_date": "2026-08-10",
         "notes": "Reduces repeated battery and adapter telemetry by ignoring raw voltage noise and sending adapter runtime only when its minute value changes."
+      },
+      {
+        "version": "0.2.61",
+        "bin_url": "https://cdn.jsdelivr.net/gh/jeffffa/autostomp-assets@main/firmware/esp32/esp32-v0.2.61.bin",
+        "release_date": "2026-08-25",
+        "notes": "Adds robust OTA recovery and detailed power telemetry, fixes charger profiles across USB-C and DC power transitions, keeps SPI event-driven to reduce audio noise, and requires authentication plus the physical pairing window before paired apps can be cleared."
       }
     ]
   },
