@@ -1,6 +1,6 @@
 {
   "esp32": {
-    "current_version": "0.2.61",
+    "current_version": "0.2.65",
     "releases": [
       {
         "version": "0.1.2",
@@ -193,11 +193,17 @@
         "bin_url": "https://cdn.jsdelivr.net/gh/jeffffa/autostomp-assets@main/firmware/esp32/esp32-v0.2.61.bin",
         "release_date": "2026-08-25",
         "notes": "Adds robust OTA recovery and detailed power telemetry, fixes charger profiles across USB-C and DC power transitions, keeps SPI event-driven to reduce audio noise, and requires authentication plus the physical pairing window before paired apps can be cleared."
+      },
+      {
+        "version": "0.2.65",
+        "bin_url": "https://cdn.jsdelivr.net/gh/jeffffa/autostomp-assets@main/firmware/esp32/esp32-v0.2.65.bin",
+        "release_date": "2026-09-18",
+        "notes": "Improves BQ25792 power measurements and battery diagnostics, adds persistent charge and discharge logs, updates the Kickloop device name, and uses the current Daisy update control path."
       }
     ]
   },
   "autostomp": {
-    "current_version": "1.0.8",
+    "current_version": "1.0.9",
     "releases": [
       {
         "version": "0.0.1",
@@ -264,6 +270,12 @@
         "bin_url": "https://cdn.jsdelivr.net/gh/jeffffa/autostomp-assets@main/firmware/autostomp/AutoStomp-v1.0.8.bin",
         "release_date": "2026-09-04",
         "notes": "Built for the new centered 1.65 V piezo circuit and adds automatic restart into the Daisy bootloader through ESP32 GPIO0 on Daisy D1 for app-driven firmware updates."
+      },
+      {
+        "version": "1.0.9",
+        "bin_url": "https://cdn.jsdelivr.net/gh/jeffffa/autostomp-assets@main/firmware/autostomp/AutoStomp-v1.0.9.bin",
+        "release_date": "2026-09-18",
+        "notes": "Adds the Vel max setting for a fixed stomp velocity range and suppresses false stomp triggers caused by pressing or releasing the encoder."
       }
     ]
   }
