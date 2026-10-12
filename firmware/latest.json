@@ -209,7 +209,7 @@
     ]
   },
   "autostomp": {
-    "current_version": "1.0.9",
+    "current_version": "1.0.10",
     "releases": [
       {
         "version": "0.0.1",
@@ -282,6 +282,12 @@
         "bin_url": "https://cdn.jsdelivr.net/gh/jeffffa/autostomp-assets@main/firmware/autostomp/AutoStomp-v1.0.9.bin",
         "release_date": "2026-09-18",
         "notes": "Adds the Vel max setting for a fixed stomp velocity range and suppresses false stomp triggers caused by pressing or releasing the encoder."
+      },
+      {
+        "version": "1.0.10",
+        "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/autostomp/AutoStomp-v1.0.10.bin",
+        "release_date": "2026-10-12",
+        "notes": "Sends every kick as a MIDI note and the Auto state as CC 102 on the DIN output, so the app can report manual and Auto kick statistics. Also stops driving an unused LED pin and ignores piezo triggers while the Exit button is pressed."
       }
     ]
   }
