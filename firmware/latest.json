@@ -209,7 +209,7 @@
     ]
   },
   "autostomp": {
-    "current_version": "1.0.10",
+    "current_version": "1.0.11",
     "releases": [
       {
         "version": "0.0.1",
@@ -288,6 +288,12 @@
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/autostomp/AutoStomp-v1.0.10.bin",
         "release_date": "2026-10-12",
         "notes": "Sends every kick as a MIDI note and the Auto state as CC 102 on the DIN output, so the app can report manual and Auto kick statistics. Also stops driving an unused LED pin and ignores piezo triggers while the Exit button is pressed."
+      },
+      {
+        "version": "1.0.11",
+        "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/autostomp/AutoStomp-v1.0.11.bin",
+        "release_date": "2026-10-16",
+        "notes": "Shows the new tempo on the display right after each stomp instead of one stomp late. The stomp that stops Auto mode no longer changes the Auto velocity, so resuming Auto after a break keeps the velocity it had."
       }
     ]
   }
