@@ -209,7 +209,7 @@
     ]
   },
   "autostomp": {
-    "current_version": "1.0.12",
+    "current_version": "1.0.13",
     "releases": [
       {
         "version": "0.0.1",
@@ -300,6 +300,12 @@
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/autostomp/AutoStomp-v1.0.12.bin",
         "release_date": "2026-10-18",
         "notes": "In Auto mode, a stomp now has to be at least about a third as strong as your playing before Auto to stop it, so floor vibration and light knocks no longer stop Auto. The first Auto beat is also no longer delayed by the display update, which could make Auto feel like it rushed right after pressing the button."
+      },
+      {
+        "version": "1.0.13",
+        "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/autostomp/AutoStomp-v1.0.13.bin",
+        "release_date": "2026-10-18",
+        "notes": "Kickloop now tells the app which firmware version is installed, so the version shown in the app is always correct, even if the update was not made from the app."
       }
     ]
   }
