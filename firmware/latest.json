@@ -209,7 +209,7 @@
     ]
   },
   "autostomp": {
-    "current_version": "1.0.11",
+    "current_version": "1.0.12",
     "releases": [
       {
         "version": "0.0.1",
@@ -294,6 +294,12 @@
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/autostomp/AutoStomp-v1.0.11.bin",
         "release_date": "2026-10-16",
         "notes": "Shows the new tempo on the display right after each stomp instead of one stomp late. The stomp that stops Auto mode no longer changes the Auto velocity, so resuming Auto after a break keeps the velocity it had."
+      },
+      {
+        "version": "1.0.12",
+        "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/autostomp/AutoStomp-v1.0.12.bin",
+        "release_date": "2026-10-18",
+        "notes": "In Auto mode, a stomp now has to be at least about a third as strong as your playing before Auto to stop it, so floor vibration and light knocks no longer stop Auto. The first Auto beat is also no longer delayed by the display update, which could make Auto feel like it rushed right after pressing the button."
       }
     ]
   }
