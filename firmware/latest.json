@@ -209,7 +209,7 @@
     ]
   },
   "autostomp": {
-    "current_version": "1.0.13",
+    "current_version": "1.0.14",
     "releases": [
       {
         "version": "0.0.1",
@@ -306,6 +306,12 @@
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/autostomp/AutoStomp-v1.0.13.bin",
         "release_date": "2026-10-18",
         "notes": "Kickloop now tells the app which firmware version is installed, so the version shown in the app is always correct, even if the update was not made from the app."
+      },
+      {
+        "version": "1.0.14",
+        "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/autostomp/AutoStomp-v1.0.14.bin",
+        "release_date": "2026-10-18",
+        "notes": "The About page on the pedal shows the firmware version in a shorter form (SW: 1.0.14)."
       }
     ]
   }
