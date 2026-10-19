@@ -314,5 +314,17 @@
         "notes": "The About page on the pedal shows the firmware version in a shorter form (SW: 1.0.14)."
       }
     ]
+  },
+  "pedal": {
+    "current_version": "1.0.14",
+    "releases": [
+      {
+        "version": "1.0.14",
+        "esp32": "0.2.68",
+        "autostomp": "1.0.14",
+        "release_date": "2026-10-19",
+        "notes": "The About page on the pedal shows the firmware version in a shorter form (SW: 1.0.14)."
+      }
+    ]
   }
 }
