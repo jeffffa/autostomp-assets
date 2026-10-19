@@ -6,205 +6,239 @@
         "version": "0.1.2",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.1.2.bin",
         "release_date": "2026-03-04",
-        "notes": "Earlier ESP32 firmware release."
+        "notes": "Earlier ESP32 firmware release.",
+        "size": 1129328
       },
       {
         "version": "0.1.4",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.1.4.bin",
         "release_date": "2026-03-04",
-        "notes": "ESP32 OTA update before 0.1.5."
+        "notes": "ESP32 OTA update before 0.1.5.",
+        "size": 1128288
       },
       {
         "version": "0.1.5",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.1.5.bin",
         "release_date": "2026-03-09",
-        "notes": "Control Footloose with Blueetooth and ESP-Now compatible footpedal. With ESP-Now you can control a bluetooth device and Footloose simultaneously."
+        "notes": "Control Footloose with Blueetooth and ESP-Now compatible footpedal. With ESP-Now you can control a bluetooth device and Footloose simultaneously.",
+        "size": 1157536
       },
       {
         "version": "0.1.6",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.1.6.bin",
         "release_date": "2026-03-18",
-        "notes": "Faster ESP32 update time, once updated this patch smooth up the next update."
+        "notes": "Faster ESP32 update time, once updated this patch smooth up the next update.",
+        "size": 1148960
       },
       {
         "version": "0.1.7",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.1.7.bin",
         "release_date": "2026-04-21",
-        "notes": "Bug fixes. Fixed an issue where sounds could not be added to the pedal when using ESP-NOW."
+        "notes": "Bug fixes. Fixed an issue where sounds could not be added to the pedal when using ESP-NOW.",
+        "size": 946512
       },
       {
         "version": "0.2.6",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.6.bin",
         "release_date": "2026-04-28",
-        "notes": "Fixes ESP32 OTA update ACK timing and keeps compatibility with devices already running the previous OTA build."
+        "notes": "Fixes ESP32 OTA update ACK timing and keeps compatibility with devices already running the previous OTA build.",
+        "size": 946608
       },
       {
         "version": "0.2.7",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.7.bin",
         "release_date": "2026-04-28",
-        "notes": "Fixes Daisy firmware update reliability by matching the ESP32 SPI transaction size to the Daisy bootloader update packet size."
+        "notes": "Fixes Daisy firmware update reliability by matching the ESP32 SPI transaction size to the Daisy bootloader update packet size.",
+        "size": 946656
       },
       {
         "version": "0.2.8",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.8.bin",
         "release_date": "2026-04-29",
-        "notes": "Adds cumulative ESP32 runtime tracking for diagnostics and telemetry."
+        "notes": "Adds cumulative ESP32 runtime tracking for diagnostics and telemetry.",
+        "size": 947888
       },
       {
         "version": "0.2.9",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.9.bin",
         "release_date": "2026-04-29",
-        "notes": "Adds ESP32 reset reason reporting for diagnostics and expanded app telemetry."
+        "notes": "Adds ESP32 reset reason reporting for diagnostics and expanded app telemetry.",
+        "size": 948272
       },
       {
         "version": "0.2.10",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.10.bin",
         "release_date": "2026-04-29",
-        "notes": "Fixes ESP32 runtime reporting by separating total, session, and saved counters."
+        "notes": "Fixes ESP32 runtime reporting by separating total, session, and saved counters.",
+        "size": 948288
       },
       {
         "version": "0.2.11",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.11.bin",
         "release_date": "2026-04-29",
-        "notes": "Adds an immediate battery status request so the app can refresh battery data as soon as it connects."
+        "notes": "Adds an immediate battery status request so the app can refresh battery data as soon as it connects.",
+        "size": 953040
       },
       {
         "version": "0.2.12",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.12.bin",
         "release_date": "2026-05-03",
-        "notes": "Stores completed battery sessions on the ESP32 and lets the app sync the backlog to Firebase later."
+        "notes": "Stores completed battery sessions on the ESP32 and lets the app sync the backlog to Firebase later.",
+        "size": 954048
       },
       {
         "version": "0.2.13",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.13.bin",
         "release_date": "2026-05-03",
-        "notes": "Adds adapter runtime tracking and stores completed adapter sessions on the ESP32 for later Firebase sync."
+        "notes": "Adds adapter runtime tracking and stores completed adapter sessions on the ESP32 for later Firebase sync.",
+        "size": 955168
       },
       {
         "version": "0.2.14",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.14.bin",
         "release_date": "2026-05-03",
-        "notes": "Improves saved battery and adapter session handling across power cycles."
+        "notes": "Improves saved battery and adapter session handling across power cycles.",
+        "size": 955408
       },
       {
         "version": "0.2.15",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.15.bin",
         "release_date": "2026-05-03",
-        "notes": "Moves product statistics into the ESP32: saved battery cycles with min/max voltage, adapter sessions, lifetime runtime, cached storage stats, and Auto use count."
+        "notes": "Moves product statistics into the ESP32: saved battery cycles with min/max voltage, adapter sessions, lifetime runtime, cached storage stats, and Auto use count.",
+        "size": 957328
       },
       {
         "version": "0.2.16",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.16.bin",
         "release_date": "2026-05-03",
-        "notes": "Stores up to 500 unsynced battery cycles on the ESP32 using a compact queue, matching a typical Li-ion battery lifetime."
+        "notes": "Stores up to 500 unsynced battery cycles on the ESP32 using a compact queue, matching a typical Li-ion battery lifetime.",
+        "size": 957680
       },
       {
         "version": "0.2.17",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.17.bin",
         "release_date": "2026-05-03",
-        "notes": "Fixes Auto usage counting so the first detected Auto-on state is counted, and writes 0 instead of null in app telemetry."
+        "notes": "Fixes Auto usage counting so the first detected Auto-on state is counted, and writes 0 instead of null in app telemetry.",
+        "size": 957680
       },
       {
         "version": "0.2.18",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.18.bin",
         "release_date": "2026-05-03",
-        "notes": "Sends ESP32 battery voltage, percentage, and charge status to Daisy over SPI so the pedal display can use the ESP32 battery measurement."
+        "notes": "Sends ESP32 battery voltage, percentage, and charge status to Daisy over SPI so the pedal display can use the ESP32 battery measurement.",
+        "size": 957968
       },
       {
         "version": "0.2.19",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.19.bin",
         "release_date": "2026-05-03",
-        "notes": "Reduces release-mode serial logging in the BLE/SPI data path so the app stays responsive just after connecting."
+        "notes": "Reduces release-mode serial logging in the BLE/SPI data path so the app stays responsive just after connecting.",
+        "size": 957136
       },
       {
         "version": "0.2.20",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.20.bin",
         "release_date": "2026-05-03",
-        "notes": "Defers automatic saved BT MIDI reconnect while the app is connected, avoiding the initial Web Bluetooth freeze from blocking connect timeouts."
+        "notes": "Defers automatic saved BT MIDI reconnect while the app is connected, avoiding the initial Web Bluetooth freeze from blocking connect timeouts.",
+        "size": 957184
       },
       {
         "version": "0.2.21",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.21.bin",
         "release_date": "2026-05-03",
-        "notes": "Fixes battery voltage ADC calibration and adds battery percentage to the SPI message sent to Daisy, so the pedal display shows an accurate charge level."
+        "notes": "Fixes battery voltage ADC calibration and adds battery percentage to the SPI message sent to Daisy, so the pedal display shows an accurate charge level.",
+        "size": 957136
       },
       {
         "version": "0.2.22",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.22.bin",
         "release_date": "2026-05-03",
-        "notes": "Calibrates battery percentage to the measured hardware: 2.68 V ADC = 8.235 V (100%), giving accurate charge readings in the app and on the pedal display."
+        "notes": "Calibrates battery percentage to the measured hardware: 2.68 V ADC = 8.235 V (100%), giving accurate charge readings in the app and on the pedal display.",
+        "size": 957152
       },
       {
         "version": "0.2.23",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.23.bin",
         "release_date": "2026-05-03",
-        "notes": "Adds DC adapter voltage detection on GPIO4 (9/12/18/24 V), near-instant BLE updates when adapter or charger state changes, accurate adapter plug-in counting, and recalibrated battery voltage (2.56 V ADC = 8.3 V, 8.0 V = 100%)."
+        "notes": "Adds DC adapter voltage detection on GPIO4 (9/12/18/24 V), near-instant BLE updates when adapter or charger state changes, accurate adapter plug-in counting, and recalibrated battery voltage (2.56 V ADC = 8.3 V, 8.0 V = 100%).",
+        "size": 957408
       },
       {
         "version": "0.2.24",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.24.bin",
         "release_date": "2026-05-05",
-        "notes": "Improves low-latency MIDI handling over BLE/ESP-NOW, reduces heartbeat traffic while connected, and clears legacy ESP32 stats storage after the stats model moved out of bridge firmware."
+        "notes": "Improves low-latency MIDI handling over BLE/ESP-NOW, reduces heartbeat traffic while connected, and clears legacy ESP32 stats storage after the stats model moved out of bridge firmware.",
+        "size": 952288
       },
       {
         "version": "0.2.26",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.26.bin",
         "release_date": "2026-05-19",
-        "notes": "Moves IRQ and CS to GPIO6/GPIO7 (D4/D5) to free the hardware UART pins (GPIO20/21) for serial monitoring."
+        "notes": "Moves IRQ and CS to GPIO6/GPIO7 (D4/D5) to free the hardware UART pins (GPIO20/21) for serial monitoring.",
+        "size": 971072
       },
       {
         "version": "0.2.25",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.25.bin",
         "release_date": "2026-05-09",
-        "notes": "Adds a newer bridge release for the iPhone app, including the latest BLE bridge fixes and updated device identification in the app picker."
+        "notes": "Adds a newer bridge release for the iPhone app, including the latest BLE bridge fixes and updated device identification in the app picker.",
+        "size": 957648
       },
       {
         "version": "0.2.27",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.27.bin",
         "release_date": "2026-07-13",
-        "notes": "Adds BLE app pairing and authentication, improves Daisy firmware and sound upload acknowledgements, stores runtime and battery-life statistics more reliably, and expands BQ25792 charger configuration, temperature, and fault monitoring."
+        "notes": "Adds BLE app pairing and authentication, improves Daisy firmware and sound upload acknowledgements, stores runtime and battery-life statistics more reliably, and expands BQ25792 charger configuration, temperature, and fault monitoring.",
+        "size": 974560
       },
       {
         "version": "0.2.29",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.29.bin",
         "release_date": "2026-07-26",
-        "notes": "Keeps event-driven SPI during normal operation while restoring continuous Daisy bootloader polling during firmware updates, preventing update timeouts and capturing final verification responses."
+        "notes": "Keeps event-driven SPI during normal operation while restoring continuous Daisy bootloader polling during firmware updates, preventing update timeouts and capturing final verification responses.",
+        "size": 972032
       },
       {
         "version": "0.2.30",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.30.bin",
         "release_date": "2026-07-31",
-        "notes": "Introduces NVS schema v5 with minute-based runtime statistics, 15-minute usage sessions, separate USB-C and DC connection counters, simplified battery lifetime tracking, and removal of obsolete battery history and cached storage data."
+        "notes": "Introduces NVS schema v5 with minute-based runtime statistics, 15-minute usage sessions, separate USB-C and DC connection counters, simplified battery lifetime tracking, and removal of obsolete battery history and cached storage data.",
+        "size": 970864
       },
       {
         "version": "0.2.31",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.31.bin",
         "release_date": "2026-07-31",
-        "notes": "Improves full-charge reporting and remembers completed charging across adapter reconnections and power cycles, preventing unnecessary recharging until the 2S battery drops below 8.20 V."
+        "notes": "Improves full-charge reporting and remembers completed charging across adapter reconnections and power cycles, preventing unnecessary recharging until the 2S battery drops below 8.20 V.",
+        "size": 971680
       },
       {
         "version": "0.2.32",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/esp32/esp32-v0.2.32.bin",
         "release_date": "2026-08-10",
-        "notes": "Reduces repeated battery and adapter telemetry by ignoring raw voltage noise and sending adapter runtime only when its minute value changes."
+        "notes": "Reduces repeated battery and adapter telemetry by ignoring raw voltage noise and sending adapter runtime only when its minute value changes.",
+        "size": 971680
       },
       {
         "version": "0.2.61",
         "bin_url": "https://cdn.jsdelivr.net/gh/jeffffa/autostomp-assets@main/firmware/esp32/esp32-v0.2.61.bin",
         "release_date": "2026-08-25",
-        "notes": "Adds robust OTA recovery and detailed power telemetry, fixes charger profiles across USB-C and DC power transitions, keeps SPI event-driven to reduce audio noise, and requires authentication plus the physical pairing window before paired apps can be cleared."
+        "notes": "Adds robust OTA recovery and detailed power telemetry, fixes charger profiles across USB-C and DC power transitions, keeps SPI event-driven to reduce audio noise, and requires authentication plus the physical pairing window before paired apps can be cleared.",
+        "size": 988656
       },
       {
         "version": "0.2.65",
         "bin_url": "https://cdn.jsdelivr.net/gh/jeffffa/autostomp-assets@main/firmware/esp32/esp32-v0.2.65.bin",
         "release_date": "2026-09-18",
-        "notes": "Improves BQ25792 power measurements and battery diagnostics, adds persistent charge and discharge logs, updates the Kickloop device name, and uses the current Daisy update control path."
+        "notes": "Improves BQ25792 power measurements and battery diagnostics, adds persistent charge and discharge logs, updates the Kickloop device name, and uses the current Daisy update control path.",
+        "size": 1030976
       },
       {
         "version": "0.2.68",
         "bin_url": "https://cdn.jsdelivr.net/gh/jeffffa/autostomp-assets@main/firmware/esp32/esp32-v0.2.68.bin",
         "release_date": "2026-10-06",
-        "notes": "Counts manual and Auto kicks from the pedal's MIDI output so the app can report kick statistics."
+        "notes": "Counts manual and Auto kicks from the pedal's MIDI output so the app can report kick statistics.",
+        "size": 1045248
       }
     ]
   },
@@ -215,103 +249,120 @@
         "version": "0.0.1",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/autostomp/autostomp-v0.0.1.bin",
         "release_date": "2026-03-04",
-        "notes": "Initial firmware release."
+        "notes": "Initial firmware release.",
+        "size": 151096
       },
       {
         "version": "1.0.0",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/autostomp/autostomp-v1.0.0.bin",
         "release_date": "2026-03-04",
-        "notes": "No description available."
+        "notes": "No description available.",
+        "size": 151096
       },
       {
         "version": "1.0.1",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/autostomp/AutoStomp-v1.0.1.bin",
         "release_date": "2026-03-18",
-        "notes": "Tells how much space on flash."
+        "notes": "Tells how much space on flash.",
+        "size": 152728
       },
       {
         "version": "1.0.2",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/autostomp/AutoStomp-v1.0.2.bin",
         "release_date": "2026-04-21",
-        "notes": "Update for the new piezo preamp."
+        "notes": "Update for the new piezo preamp.",
+        "size": 153256
       },
       {
         "version": "1.0.4",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/autostomp/AutoStomp-v1.0.4.bin",
         "release_date": "2026-05-03",
-        "notes": "Uses the ESP32 battery reading for the existing battery icon on the Daisy display."
+        "notes": "Uses the ESP32 battery reading for the existing battery icon on the Daisy display.",
+        "size": 155796
       },
       {
         "version": "1.0.5",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/autostomp/AutoStomp-v1.0.5.bin",
         "release_date": "2026-07-13",
-        "notes": "Moves sound and settings storage to QSPI, improves firmware and sound upload stability, pauses pedal processing during uploads, and fixes sound switching and QSPI reliability."
+        "notes": "Moves sound and settings storage to QSPI, improves firmware and sound upload stability, pauses pedal processing during uploads, and fixes sound switching and QSPI reliability.",
+        "size": 118572
       },
       {
         "version": "1.0.6",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/autostomp/AutoStomp-v1.0.6.bin",
         "release_date": "2026-07-23",
-        "notes": "Publishes the hardware-tested blocking-SPI Autostomp2000 build paired with the event-driven ESP32 bridge for stable audio operation."
+        "notes": "Publishes the hardware-tested blocking-SPI Autostomp2000 build paired with the event-driven ESP32 bridge for stable audio operation.",
+        "size": 118628
       },
       {
         "version": "1.0.7",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/autostomp/AutoStomp-v1.0.7.bin",
         "release_date": "2026-07-23",
-        "notes": "Publishes the standard Autostomp2000 firmware produced directly by the project Makefile."
+        "notes": "Publishes the standard Autostomp2000 firmware produced directly by the project Makefile.",
+        "size": 118572
       },
       {
         "version": "1.0.8-test.1",
         "bin_url": "https://cdn.jsdelivr.net/gh/jeffffa/autostomp-assets@main/firmware/autostomp/AutoStomp-v1.0.8-test.1.bin",
         "release_date": "2026-08-19",
-        "notes": "Experimental Autostomp2000 build for testing automatic app-driven bootloader entry and firmware installation through Daisy D20."
+        "notes": "Experimental Autostomp2000 build for testing automatic app-driven bootloader entry and firmware installation through Daisy D20.",
+        "size": 157092
       },
       {
         "version": "1.0.8-test.2",
         "bin_url": "https://cdn.jsdelivr.net/gh/jeffffa/autostomp-assets@main/firmware/autostomp/AutoStomp-v1.0.8-test.2.bin",
         "release_date": "2026-08-24",
-        "notes": "Test build that restarts directly when the ESP32 holds Daisy D20 low for 50 ms, while retaining the SPI boot_reset fallback."
+        "notes": "Test build that restarts directly when the ESP32 holds Daisy D20 low for 50 ms, while retaining the SPI boot_reset fallback.",
+        "size": 157140
       },
       {
         "version": "1.0.8",
         "bin_url": "https://cdn.jsdelivr.net/gh/jeffffa/autostomp-assets@main/firmware/autostomp/AutoStomp-v1.0.8.bin",
         "release_date": "2026-09-04",
-        "notes": "Built for the new centered 1.65 V piezo circuit and adds automatic restart into the Daisy bootloader through ESP32 GPIO0 on Daisy D1 for app-driven firmware updates."
+        "notes": "Built for the new centered 1.65 V piezo circuit and adds automatic restart into the Daisy bootloader through ESP32 GPIO0 on Daisy D1 for app-driven firmware updates.",
+        "size": 121540
       },
       {
         "version": "1.0.9",
         "bin_url": "https://cdn.jsdelivr.net/gh/jeffffa/autostomp-assets@main/firmware/autostomp/AutoStomp-v1.0.9.bin",
         "release_date": "2026-09-18",
-        "notes": "Adds the Vel max setting for a fixed stomp velocity range and suppresses false stomp triggers caused by pressing or releasing the encoder."
+        "notes": "Adds the Vel max setting for a fixed stomp velocity range and suppresses false stomp triggers caused by pressing or releasing the encoder.",
+        "size": 121252
       },
       {
         "version": "1.0.10",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/autostomp/AutoStomp-v1.0.10.bin",
         "release_date": "2026-10-12",
-        "notes": "Sends every kick as a MIDI note and the Auto state as CC 102 on the DIN output, so the app can report manual and Auto kick statistics. Also stops driving an unused LED pin and ignores piezo triggers while the Exit button is pressed."
+        "notes": "Sends every kick as a MIDI note and the Auto state as CC 102 on the DIN output, so the app can report manual and Auto kick statistics. Also stops driving an unused LED pin and ignores piezo triggers while the Exit button is pressed.",
+        "size": 121660
       },
       {
         "version": "1.0.11",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/autostomp/AutoStomp-v1.0.11.bin",
         "release_date": "2026-10-16",
-        "notes": "Shows the new tempo on the display right after each stomp instead of one stomp late. The stomp that stops Auto mode no longer changes the Auto velocity, so resuming Auto after a break keeps the velocity it had."
+        "notes": "Shows the new tempo on the display right after each stomp instead of one stomp late. The stomp that stops Auto mode no longer changes the Auto velocity, so resuming Auto after a break keeps the velocity it had.",
+        "size": 121796
       },
       {
         "version": "1.0.12",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/autostomp/AutoStomp-v1.0.12.bin",
         "release_date": "2026-10-18",
-        "notes": "In Auto mode, a stomp now has to be at least about a third as strong as your playing before Auto to stop it, so floor vibration and light knocks no longer stop Auto. The first Auto beat is also no longer delayed by the display update, which could make Auto feel like it rushed right after pressing the button."
+        "notes": "In Auto mode, a stomp now has to be at least about a third as strong as your playing before Auto to stop it, so floor vibration and light knocks no longer stop Auto. The first Auto beat is also no longer delayed by the display update, which could make Auto feel like it rushed right after pressing the button.",
+        "size": 122100
       },
       {
         "version": "1.0.13",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/autostomp/AutoStomp-v1.0.13.bin",
         "release_date": "2026-10-18",
-        "notes": "Kickloop now tells the app which firmware version is installed, so the version shown in the app is always correct, even if the update was not made from the app."
+        "notes": "Kickloop now tells the app which firmware version is installed, so the version shown in the app is always correct, even if the update was not made from the app.",
+        "size": 122116
       },
       {
         "version": "1.0.14",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/autostomp/AutoStomp-v1.0.14.bin",
         "release_date": "2026-10-18",
-        "notes": "The About page on the pedal shows the firmware version in a shorter form (SW: 1.0.14)."
+        "notes": "The About page on the pedal shows the firmware version in a shorter form (SW: 1.0.14).",
+        "size": 122108
       }
     ]
   },
