@@ -243,7 +243,7 @@
     ]
   },
   "autostomp": {
-    "current_version": "1.0.14",
+    "current_version": "1.0.15",
     "releases": [
       {
         "version": "0.0.1",
@@ -363,11 +363,18 @@
         "release_date": "2026-10-18",
         "notes": "The About page on the pedal shows the firmware version in a shorter form (SW: 1.0.14).",
         "size": 122108
+      },
+      {
+        "version": "1.0.15",
+        "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/autostomp/AutoStomp-v1.0.15.bin",
+        "release_date": "2026-10-21",
+        "notes": "In Auto, a stomp too weak to stop Auto now makes the LED blink red, so you can see it was ignored.",
+        "size": 122340
       }
     ]
   },
   "pedal": {
-    "current_version": "1.0.14",
+    "current_version": "1.0.15",
     "releases": [
       {
         "version": "1.0.14",
@@ -375,6 +382,13 @@
         "autostomp": "1.0.14",
         "release_date": "2026-10-19",
         "notes": "The About page on the pedal shows the firmware version in a shorter form (SW: 1.0.14)."
+      },
+      {
+        "version": "1.0.15",
+        "esp32": "0.2.68",
+        "autostomp": "1.0.15",
+        "release_date": "2026-10-21",
+        "notes": "In Auto, a stomp too weak to stop Auto now makes the LED blink red, so you can see it was ignored."
       }
     ]
   }
