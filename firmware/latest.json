@@ -379,17 +379,10 @@
         "size": 122340
       },
       {
-        "version": "1.0.16",
-        "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/autostomp/AutoStomp-v1.0.16.bin",
-        "release_date": "2026-10-26",
-        "notes": "Sounds now live in 17 numbered slots. Deleting or replacing a sound frees its slot right away, with no Compact needed, and the selected sound stays selected when another sound is deleted. This update erases the sounds on the pedal once: upload them again from Library or Upload in the app.",
-        "size": 121712
-      },
-      {
         "version": "1.0.17",
         "bin_url": "https://raw.githubusercontent.com/jeffffa/autostomp-assets/main/firmware/autostomp/AutoStomp-v1.0.17.bin",
         "release_date": "2026-10-26",
-        "notes": "The pedal now has 16 sound slots instead of 17, leaving room for future features. Sounds in slots 1-16 are kept; a sound in slot 17 is removed.",
+        "notes": "Sounds now live in 16 numbered slots. Deleting or replacing a sound frees its slot right away, with no Compact needed, and the selected sound stays selected when another sound is deleted. This update erases the sounds on the pedal once: upload them again from Library or Upload in the app.",
         "size": 121712
       }
     ]
@@ -412,18 +405,11 @@
         "notes": "In Auto, a stomp too weak to stop Auto now makes the LED blink red, so you can see it was ignored."
       },
       {
-        "version": "1.0.16",
-        "esp32": "0.2.69",
-        "autostomp": "1.0.16",
-        "release_date": "2026-10-26",
-        "notes": "Sounds now live in 17 numbered slots, and deleting or replacing a sound frees its slot right away. Important: this update erases the sounds on the pedal once. Upload them again from Library or Upload in the app."
-      },
-      {
         "version": "1.0.17",
         "esp32": "0.2.69",
         "autostomp": "1.0.17",
         "release_date": "2026-10-26",
-        "notes": "The pedal now has 16 sound slots instead of 17, leaving room for future features. Sounds in slots 1-16 are kept; a sound in slot 17 is removed."
+        "notes": "Sounds now live in 16 numbered slots, and deleting or replacing a sound frees its slot right away. Important: this update erases the sounds on the pedal once. Upload them again from Library or Upload in the app."
       }
     ]
   }
